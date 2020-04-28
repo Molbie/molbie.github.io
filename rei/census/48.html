@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <base href="https://molbie.co/" />
+        <link rel="apple-touch-icon" sizes="180x180" href="https://molbie.co/images/favicon/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" href="https://molbie.co/images/favicon/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://molbie.co/images/favicon/favicon-194x194.png" sizes="194x194" />
+        <link rel="icon" type="image/png" href="https://molbie.co/images/favicon/android-chrome-192x192.png" sizes="192x192" />
+        <link rel="icon" type="image/png" href="https://molbie.co/images/favicon/favicon-16x16.png" sizes="16x16" />
+        <link rel="manifest" href="https://molbie.co/images/favicon/manifest.json" />
+        <link rel="mask-icon" href="https://molbie.co/images/favicon/safari-pinned-tab.svg" color="#305eab" />
+        <link rel="shortcut icon" href="https://molbie.co/images/favicon/favicon.ico" />
+        <meta name="msapplication-TileColor" content="#000000">
+        <meta name="msapplication-TileImage" content="https://molbie.co/images/favicon/mstile-144x144.png">
+        <meta name="msapplication-config" content="https://molbie.co/images/favicon/browserconfig.xml">
+        <meta name="theme-color" content="#000000">
+
+        <title>Molbie</title>
+        
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+        <link href="https://molbie.co/css/ie10-viewport-bug-workaround.css" rel="stylesheet" />
+
+        <!-- Template -->
+        <link href="https://molbie.co/css/icons.css" rel="stylesheet" />
+        <link href="https://molbie.co/css/fonts.css" rel="stylesheet" />
+        <link href="https://molbie.co/css/template.css" rel="stylesheet" />
+        
+        <!-- Page -->
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+        <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" rel="stylesheet" />
+        <link href="https://molbie.co/rei/css/map.css" rel="stylesheet" />
+
+        <!--[if lt IE 9]><script src="https://molbie.co/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="https://molbie.co/js/ie-emulation-modes-warning.js"></script>
+
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+              <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <a name="top" id="top"></a>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="" title="Molbie">
+                        <img src="https://molbie.co/images/logo.svg" alt="Molbie Logo">
+                    </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active">
+                            <a href="" title="Home">
+                                <span class="icon-home"></span>
+                                <span data-title="Home">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/Molbie" title="Open Source">
+                                <span class="icon-opensource"></span>
+                                <span data-title="Open Source">Open Source</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid collectionView">
+            <div class="item">
+                <div class="content">
+                    <section>
+                        <div id="map" style="height: 990px;"></div>
+                        <div id="geocoder" class="geocoder"></div>
+                        <div class="map-overlay">
+                            <div id="mapOverlayContent">
+                                <p><strong>GEOID: </strong><br /><span id="geoId">-</span></p>
+                                <p><strong>NAME: </strong><br /><span id="geoName">-</span></p>
+                                <p><strong>LAND SQ MILES: </strong><br /><span id="landArea">-</span></p>
+                                <p><strong>WATER SQ MILES: </strong><br /><span id="waterArea">-</span></p>
+                                <p><strong>POPULATION: </strong><br /><span id="population">-</span></p>
+                                <p><strong>HOUSEHOLDS: </strong><br /><span id="households">-</span></p>
+                                <p><strong>MEDIAN AGE: </strong><br /><span id="medianAge">-</span></p>
+                                <p><strong>FAMILY INCOME: </strong><br /><span id="familyIncome">-</span></p>
+                                <p><strong>HOUSEHOLD INCOME: </strong><br /><span id="householdIncome">-</span></p>
+                                <p><strong>PER CAPITA INCOME: </strong><br /><span id="perCapitaIncome">-</span></p>
+                                <p><strong>HOUSING UNITS: </strong><br /><span id="housingUnits">-</span></p>
+                                <p><strong>MEDIAN HOUSE VALUE: </strong><br /><span id="houseValue">-</span></p>
+                                <p><strong>UPPER QUARTILE HOUSE VALUE: </strong><br /><span id="upperHouseValue">-</span></p>
+                                <p><strong>LOWER QUARTILE HOUSE VALUE: </strong><br /><span id="lowerHouseValue">-</span></p>
+                                <p><strong>VACANCY RATE: </strong><br /><span id="vacancyRate">-</span></p>
+                                <p><strong>POVERTY RATE: </strong><br /><span id="povertyRate">-</span></p>
+                                <p><strong>UNEMPLOYMENT RATE: </strong><br /><span id="unemploymentRate">-</span></p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="content">
+                    <canvas id="populationChart"></canvas>
+                    <canvas id="householdsChart"></canvas>
+                    <canvas id="incomeChart"></canvas>
+                    <canvas id="houseValueChart"></canvas>
+                    <canvas id="housingUnitsChart"></canvas>
+                    <canvas id="vacancyChart"></canvas>
+                    <canvas id="povertyChart"></canvas>
+                    <canvas id="unemploymentChart"></canvas>
+                    <canvas id="medianAgeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">Copyright &copy; 2016-2020 Molbie LLC. All rights reserved.</p>
+            </div>
+        </footer>
+        <!-- Bootstrap -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://molbie.co/js/ie10-viewport-bug-workaround.js"></script>
+        
+        <!-- Template -->
+        <script src="https://molbie.co/js/template.js"></script>
+        
+        <!-- Page -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="https://www.chartjs.org/dist/2.9.3/Chart.min.js"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+        <script src="https://molbie.co/rei/js/mapdata.js"></script>
+        <script src="https://molbie.co/rei/js/mapcontroller.js"></script>
+        <script src="https://molbie.co/rei/js/mapcharts.js"></script>
+        <script>
+            $(window).load(function() {
+                'use strict';
+                
+                var mapdata = makeMapData("https://molbie.co/rei/census/", "48", "tract", [-99.9018, 31.9686]);
+                mapdata.load();
+                
+                var mapController = makeMapController(mapdata);
+                mapController.load();
+                
+                var mapCharts = makeMapCharts(mapdata);
+                mapCharts.load();
+                
+                var populationChart = mapCharts.makePopulationChart();
+                var householdsChart = mapCharts.makeHouseholdsChart();
+                var incomeChart = mapCharts.makeIncomeChart();
+                var houseValueChart = mapCharts.makeHouseValueChart();
+                var housingUnitsChart = mapCharts.makeHousingUnitsChart();
+                var vacancyChart = mapCharts.makeVacancyChart();
+                var povertyChart = mapCharts.makePovertyChart();
+                var unemploymentChart = mapCharts.makeUnemploymentChart();
+                var medianAgeChart = mapCharts.makeMedianAgeChart();
+                
+                mapController.reloadUI = function(geoId, geoName, landArea, waterArea) {
+                    var showValues = true;
+                    
+                    var populationDataset = populationChart.config.data.datasets[0];
+                    populationDataset.data = mapdata.chartPopulationData(geoId, showValues);
+                    populationChart.update();
+                    
+                    var householdsDataset = householdsChart.config.data.datasets[0];
+                    householdsDataset.data = mapdata.chartHouseholdsData(geoId, showValues);
+                    householdsChart.update();
+                    
+                    var householdIncomeDataset = incomeChart.config.data.datasets[0];
+                    householdIncomeDataset.data = mapdata.chartHouseholdIncomeData(geoId, showValues);
+                    var familyIncomeDataset = incomeChart.config.data.datasets[1];
+                    familyIncomeDataset.data = mapdata.chartFamilyIncomeData(geoId, showValues);
+                    var perCapitaIncomeDataset = incomeChart.config.data.datasets[2];
+                    perCapitaIncomeDataset.data = mapdata.chartPerCapitaIncomeData(geoId, showValues);
+                    incomeChart.update();
+                    
+                    var houseValueDataset = houseValueChart.config.data.datasets[0];
+                    houseValueDataset.data = mapdata.chartHouseValueData(geoId, showValues);
+                    var upperHouseValueDataset = houseValueChart.config.data.datasets[1];
+                    upperHouseValueDataset.data = mapdata.chartUpperHouseValueData(geoId, showValues);
+                    var lowerHouseValueDataset = houseValueChart.config.data.datasets[2];
+                    lowerHouseValueDataset.data = mapdata.chartLowerHouseValueData(geoId, showValues);
+                    houseValueChart.update();
+                    
+                    var housingUnitsDataset = housingUnitsChart.config.data.datasets[0];
+                    housingUnitsDataset.data = mapdata.chartHousingUnitsData(geoId, showValues);
+                    housingUnitsChart.update();
+                    
+                    var vacancyDataset = vacancyChart.config.data.datasets[0];
+                    vacancyDataset.data = mapdata.chartVacancyData(geoId, showValues);
+                    vacancyChart.update();
+                    
+                    var povertyDataset = povertyChart.config.data.datasets[0];
+                    povertyDataset.data = mapdata.chartPovertyData(geoId, showValues);
+                    povertyChart.update();
+                    
+                    var unemploymentDataset = unemploymentChart.config.data.datasets[0];
+                    unemploymentDataset.data = mapdata.chartUnemploymentData(geoId, showValues);
+                    unemploymentChart.update();
+                    
+                    var medianAgeDataset = medianAgeChart.config.data.datasets[0];
+                    medianAgeDataset.data = mapdata.chartMedianAgeData(geoId, showValues);
+                    medianAgeChart.update();
+                };
+            });
+        </script>
+    </body>
+</html>
