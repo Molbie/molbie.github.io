@@ -489,23 +489,23 @@ class RuleGrade {
 }
 class PopulationGrowthGrader {
     evaluate(geoData, rule) {
-        var years = [...GeoData.years];
         var lastYear = null;
         var lastValue = null;
         var firstYear = null;
         var firstValue = null;
 
-        years.reverse().forEach(function(year, index) {
-            if (firstValue != null) { return }
+        GeoData.years.forEach(function(year, index) {
+            var value = geoData.getPopulationTotal(year);
 
-            firstYear = year;
-            firstValue = geoData.getPopulationTotal(year);
-        });
-        years.reverse().forEach(function(year, index) {
-            if (lastValue != null) { return }
-
-            lastYear = year;
-            lastValue = geoData.getPopulationTotal(year);
+            if (lastValue == null) {
+                lastYear = year;
+                lastValue = value;
+            }
+            
+            if (value != null) {
+                firstYear = year;
+                firstValue = value;
+            }
         });
 
         if (firstValue == null || lastValue == null || firstYear == lastYear) {
@@ -531,29 +531,28 @@ class PopulationGrowthGrader {
             }
         }
         
-        console.log("HERE2");
         return new RuleGrade(Number.NaN, Number.NaN);
     }
 }
 class HouseholdMedianIncomeGrowthGrader {
     evaluate(geoData, rule) {
-        var years = [...GeoData.years];
         var firstYear = null;
         var firstValue = null;
         var lastYear = null;
         var lastValue = null;
 
-        years.reverse().forEach(function(year, index) {
-            if (firstValue != null) { return }
+        GeoData.years.forEach(function(year, index) {
+            var value = geoData.getHouseholdIncome(year);
 
-            firstYear = year;
-            firstValue = geoData.getHouseholdIncome(year);
-        });
-        years.reverse().forEach(function(year, index) {
-            if (lastValue != null) { return }
-
-            lastYear = year;
-            lastValue = geoData.getHouseholdIncome(year);
+            if (lastValue == null) {
+                lastYear = year;
+                lastValue = value;
+            }
+            
+            if (value != null) {
+                firstYear = year;
+                firstValue = value;
+            }
         });
 
         if (firstValue == null || lastValue == null || firstYear == lastYear) {
@@ -584,27 +583,27 @@ class HouseholdMedianIncomeGrowthGrader {
 }
 class HouseValueGrowthGrader {
     evaluate(geoData, rule) {
-        var years = [...GeoData.years];
         var firstYear = null;
         var firstValue = null;
         var lastYear = null;
         var lastValue = null;
 
-        years.reverse().reverse().forEach(function(year, index) {
-            if (firstValue != null) { return }
+        GeoData.years.forEach(function(year, index) {
+            var value = geoData.getMedianHouseValue(year);
 
-            firstYear = year;
-            firstValue = geoData.getMedianHouseValue(year);
-        });
-        years.reverse().forEach(function(year, index) {
-            if (lastValue != null) { return }
-
-            lastYear = year;
-            lastValue = geoData.getMedianHouseValue(year);
+            if (lastValue == null) {
+                lastYear = year;
+                lastValue = value;
+            }
+            
+            if (value != null) {
+                firstYear = year;
+                firstValue = value;
+            }
         });
 
         if (firstValue == null || lastValue == null || firstYear == lastYear) {
-            return new RuleGrade(-1, -1);
+            return new RuleGrade(Number.NaN, Number.NaN);
         }
         
         let growthRateYears = rule.targetYears;
@@ -755,7 +754,7 @@ class ReportCard {
         this.householdIncomeContainer.style.backgroundColor = householdIncomeGrade.color(this.gradingSystem);
         this.householdIncomeRate.innerHTML = householdIncomeGrade.rate;
         this.householdIncomeLetter.innerHTML = householdIncomeGrade.stringValue(this.gradingSystem);
-        
+
         var houseValueGrade = grades[RuleIdentifier.houseValueGrowth];
         this.houseValueContainer.style.backgroundColor = houseValueGrade.color(this.gradingSystem);
         this.houseValueRate.innerHTML = houseValueGrade.rate;
