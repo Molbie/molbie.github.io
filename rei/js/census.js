@@ -8,6 +8,10 @@ class CensusGeography {
     static county = "county"
     static tract = "tract"
 
+    static all() {
+        return [CensusGeography.nation, CensusGeography.region, CensusGeography.division, CensusGeography.state, CensusGeography.statisticalArea, CensusGeography.place, CensusGeography.county, CensusGeography.tract];
+    }
+
     static isValid(value) {
         var result = false;
 
@@ -25,5 +29,7 @@ class CensusGeography {
             default:
                 break;
         }
+
+        return result;
     }
 }

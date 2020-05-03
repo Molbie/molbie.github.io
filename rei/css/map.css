@@ -1,43 +1,64 @@
-#mapOverlayContent h2, h3 {
-  margin: 10px;
-  font-size: 20px;
-}
-
-#mapOverlayContent h3 {
-    font-size: 18px;
-}
-
 #mapOverlayContent p {
-  font-size: 15px;
+  font-size: 12px;
   margin: 10px;
   text-align: left;
+}
+
+#reportCard p {
+  font-size: 12px;
+  margin: 10px;
+  text-align: left;
+}
+
+#populationGradeContainer {
+  padding: 4px;
+  border-radius: 3px;
+  border: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+#householdIncomeGradeContainer {
+  padding: 4px;
+  border-radius: 3px;
+  border: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+#houseValueGradeContainer {
+  padding: 4px;
+  border-radius: 3px;
+  border: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.5);
 }
 
 .map-overlay {
     position: absolute;
     top: 50px;
     left: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(204, 204, 204, 0.5);
     margin-left: 20px;
     margin-top: 80px;
     font-family: Arial, sans-serif;
     overflow: auto;
     border-radius: 3px;
-    height: 890px;
-    width: 280px;
+    height: 810px;
+    width: 180px;
 }
 
 .geocoder {
     position: absolute;
     top: 0;
     left: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(204, 204, 204, 0.8);
     margin-left: 20px;
     font-family: Arial, sans-serif;
     overflow: auto;
     border-radius: 3px;
     margin-top: 80px;
-    width: 280px;
+    width: 500px;
 }
 
 .mapboxgl-ctrl-geocoder {

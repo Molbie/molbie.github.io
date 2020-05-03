@@ -85,23 +85,22 @@
                         <div id="geocoder" class="geocoder"></div>
                         <div class="map-overlay">
                             <div id="mapOverlayContent">
-                                <p><strong>GEOID: </strong><br /><span id="geoId">-</span></p>
-                                <p><strong>NAME: </strong><br /><span id="geoName">-</span></p>
-                                <p><strong>LAND SQ MILES: </strong><br /><span id="landArea">-</span></p>
-                                <p><strong>WATER SQ MILES: </strong><br /><span id="waterArea">-</span></p>
-                                <p><strong>POPULATION: </strong><br /><span id="population">-</span></p>
-                                <p><strong>HOUSEHOLDS: </strong><br /><span id="households">-</span></p>
-                                <p><strong>MEDIAN AGE: </strong><br /><span id="medianAge">-</span></p>
-                                <p><strong>FAMILY INCOME: </strong><br /><span id="familyIncome">-</span></p>
-                                <p><strong>HOUSEHOLD INCOME: </strong><br /><span id="householdIncome">-</span></p>
-                                <p><strong>PER CAPITA INCOME: </strong><br /><span id="perCapitaIncome">-</span></p>
-                                <p><strong>HOUSING UNITS: </strong><br /><span id="housingUnits">-</span></p>
-                                <p><strong>MEDIAN HOUSE VALUE: </strong><br /><span id="houseValue">-</span></p>
-                                <p><strong>UPPER QUARTILE HOUSE VALUE: </strong><br /><span id="upperHouseValue">-</span></p>
-                                <p><strong>LOWER QUARTILE HOUSE VALUE: </strong><br /><span id="lowerHouseValue">-</span></p>
-                                <p><strong>VACANCY RATE: </strong><br /><span id="vacancyRate">-</span></p>
-                                <p><strong>POVERTY RATE: </strong><br /><span id="povertyRate">-</span></p>
-                                <p><strong>UNEMPLOYMENT RATE: </strong><br /><span id="unemploymentRate">-</span></p>
+                                <p><strong>GEOGRAPHY</strong><br /><span>ID: </span><span id="geoId">-</span><br /><span>Name: </span><span id="geoName">-</span><br /><span>Land Sq Miles: </span><span id="landArea">-</span><br /><span>Water Sq Miles: </span><span id="waterArea">-</span></p>
+                                <p><strong>POPULATION</strong><br /><span>Total: </span><span id="population">-</span></p>
+                                <p><strong>HOUSEHOLDS</strong><br /><span>Total: </span><span id="households">-</span></p>
+                                <p><strong>INCOME</strong><br /><span>Family: </span><span id="familyIncome">-</span><br /><span>Household: </span><span id="householdIncome">-</span><br /><span>Per Capita: </span><span id="perCapitaIncome">-</span></p>
+                                <p><strong>HOUSE VALUE</strong><br /><span>Median: </span><span id="houseValue">-</span><br /><span>Upper Quartile: </span><span id="upperHouseValue">-</span><br /><span>Lower Quartile: </span><span id="lowerHouseValue">-</span></p>
+                                <p><strong>HOUSING UNITS</strong><br /><span>Total: </span><span id="housingUnits">-</span></p>
+                                <p><strong>VACANCY</strong><br /><span>Rate: </span><span id="vacancyRate">-</span></p>
+                                <p><strong>POVERTY</strong><br /><span>Rate: </span><span id="povertyRate">-</span></p>
+                                <p><strong>UNEMPLOYMENT</strong><br /><span>Rate: </span><span id="unemploymentRate">-</span></p>
+                                <p><strong>AGE</strong><br /><span>Median: </span><span id="medianAge">-</span></p>
+                            </div>
+                            <div id="reportCard">
+                                <p><strong>REPORT CARD</strong></p>
+                                <p id="populationGradeContainer"><span>Population Growth</span><br /><span>Change: </span><span id="populationGradeRate">-</span><br /><span>Grade: </span><span><strong id="populationGradeLetter">-</strong></span></p>
+                                <p id="householdIncomeGradeContainer"><span>Household Income Growth</span><br /><span>Change: </span><span id="householdIncomeGradeRate">-</span><br /><span>Grade: </span><span><strong id="householdIncomeGradeLetter">-</strong></span></p>
+                                <p id="houseValueGradeContainer"><span>House Value Growth</span><br /><span>Change: </span><span id="houseValueGradeRate">-</span><br /><span>Grade: </span><span><strong id="houseValueGradeLetter">-</strong></span></p>
                             </div>
                         </div>
                     </section>
@@ -154,16 +153,65 @@
                 var urlPrefix = "https://molbie.co/rei/census/" + geography;
                 var geoId = "48";
                 var mapData = new MapData(geoId, urlPrefix + "/data/");
+                var reportCard = new ReportCard(RuleGradingSystem.letters);
                 var ruleEngine = new RuleEngine();
+                ruleEngine.addPopulationGrowthRules();
+                ruleEngine.addHouseholdMedianIncomeGrowthRules();
+                ruleEngine.addHouseValueGrowthRules();
                 var mapCharts = new MapCharts();
-                var mapController = new MapController(mapData, 
-                                                    "pk.eyJ1IjoicHJvZ3JhbW1lci1icmlhbiIsImEiOiJjajF5YmNleHQwMGNhMnFxa3dvaHZmaDZjIn0.NQfth9E2BbhzMBSkQMv0JA", 
-                                                    urlPrefix + "/polygons/" + geoId + ".json", 
-                                                    [-99.9018, 31.9686], 
-                                                    function(geoId, geoName, landArea, waterArea) {
-                                                        var geoData = mapData.getGeoData(geoId);
-                                                        mapCharts.update(geoData);
-                                                    });
+                var overlay = new MapOverlay();
+                var onUpdate = function(geoId, geoName, landArea, waterArea) {
+                    var geoData = mapData.getGeoData(geoId);
+                    mapCharts.update(geoData);
+                };
+                var onUpdateOverlay = function(geoId, geoName, landArea, waterArea) {
+                    overlay.setGeoId(geoId);
+                    overlay.setGeoName(geoName);
+                    overlay.setLandArea(landArea);
+                    overlay.setWaterArea(waterArea);
+                    overlay.setPopulation(mapData.getPopulationTotal(geoId));
+                    overlay.setHouseholds(mapData.getHouseholdTotal(geoId));
+                    overlay.setMedianAge(mapData.getMedianAge(geoId));
+                    overlay.setFamilyIncome(mapData.getFamilyIncome(geoId));
+                    overlay.setHouseholdIncome(mapData.getHouseholdIncome(geoId));
+                    overlay.setPerCapitaIncome(mapData.getPerCapitaIncome(geoId));
+                    overlay.setHousingUnits(mapData.getHousingUnitsTotal(geoId));
+                    overlay.setHouseValue(mapData.getMedianHouseValue(geoId));
+                    overlay.setUpperHouseValue(mapData.getUpperQuartileHouseValue(geoId));
+                    overlay.setLowerHouseValue(mapData.getLowerQuartileHouseValue(geoId));
+                    overlay.setVacancyRate(mapData.getVacancyRate(geoId));
+                    overlay.setPovertyRate(mapData.getPovertyRate(geoId));
+                    overlay.setUnemploymentRate(mapData.getUnemploymentRate(geoId));
+
+                    var geoData = mapData.getGeoData(geoId);
+                    var grades = ruleEngine.evaluate(geography, geoData);
+                    reportCard.applyGrades(grades);
+                };
+                var onClearOverlay = function() {
+                    overlay.setGeoId(null);
+                    overlay.setGeoName(null);
+                    overlay.setLandArea(null);
+                    overlay.setWaterArea(null);
+                    overlay.setPopulation(null);
+                    overlay.setHouseholds(null);
+                    overlay.setMedianAge(null);
+                    overlay.setFamilyIncome(null);
+                    overlay.setHouseholdIncome(null);
+                    overlay.setPerCapitaIncome(null);
+                    overlay.setHousingUnits(null);
+                    overlay.setHouseValue(null);
+                    overlay.setUpperHouseValue(null);
+                    overlay.setLowerHouseValue(null);
+                    overlay.setVacancyRate(null);
+                    overlay.setPovertyRate(null);
+                    overlay.setUnemploymentRate(null);
+                };
+                var mapController = new MapController("pk.eyJ1IjoicHJvZ3JhbW1lci1icmlhbiIsImEiOiJjajF5YmNleHQwMGNhMnFxa3dvaHZmaDZjIn0.NQfth9E2BbhzMBSkQMv0JA", 
+                                                      urlPrefix + "/polygons/" + geoId + ".json", 
+                                                      [-99.9018, 31.9686], 
+                                                      onUpdate,
+                                                      onUpdateOverlay,
+                                                      onClearOverlay);
             });
         </script>
     </body>

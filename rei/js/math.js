@@ -17,6 +17,10 @@ class NumberRange {
         this.end = Math.max(startValue, endValue);
     }
 
+    contains(value) {
+        return value >= this.start && value < this.end;
+    }
+
     isEqual(other) {
         return Object.is(this.start, other.start) && Object.is(this.end, other.end);
     }

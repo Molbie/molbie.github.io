@@ -108,15 +108,17 @@ class MapController {
     hoverId;
     selectedId;
     update;
-    mapData;
+    updateOverlay;
+    clearOverlay;
     map;
 
-    constructor(mapData, accessToken, polygonUrl, centerPoint, onUpdate) {
+    constructor(accessToken, polygonUrl, centerPoint, onUpdate, onUpdateOverlay, onClearOverlay) {
         this.polygonUrl = polygonUrl;
         this.hoverId = null;
         this.selectedId = null;
         this.update = function(geoId, geoName, landArea, waterArea) { onUpdate(geoId, geoName, landArea, waterArea); };
-        this.mapData = mapData;
+        this.updateOverlay = function(geoId, geoName, landArea, waterArea) { onUpdateOverlay(geoId, geoName, landArea, waterArea); };
+        this.clearOverlay = function() { onClearOverlay(); };
         var self = this;
         this.map = new Map(accessToken, centerPoint, function() { self.onMapLoaded(); });
     }
@@ -203,77 +205,111 @@ class MapController {
             this.updateOverlay(geoId, geoName, landArea, waterArea)
         }
     }
+}
+class MapOverlay {
+    geoId;
+    geoName;
+    landArea;
+    waterArea;
+    population;
+    households;
+    medianAge;
+    familyIncome;
+    householdIncome;
+    perCapitaIncome;
+    housingUnits;
+    houseValue;
+    upperHouseValue;
+    lowerHouseValue;
+    vacancyRate;
+    povertyRate;
+    unemploymentRate;
 
-    updateOverlay(geoId, geoName, landArea, waterArea) {
-        document.getElementById('geoId').innerHTML = geoId;
-        document.getElementById('geoName').innerHTML = geoName == null ? "-" : geoName;
-        document.getElementById('landArea').innerHTML = landArea == null ? "-" : (landArea  / 2589988.1103).toFixed(2);
-        document.getElementById('waterArea').innerHTML = waterArea == null ? "-" : (waterArea  / 2589988.1103).toFixed(2);
-        var population = this.mapData.getPopulationTotal(geoId);
-        document.getElementById('population').innerHTML = population == null ? "-" : population;
-        var households = this.mapData.getHouseholdTotal(geoId);
-        document.getElementById('households').innerHTML = households == null ? "-" : households;
-        var medianAge = this.mapData.getMedianAge(geoId);
-        document.getElementById('medianAge').innerHTML = medianAge == null ? "-" : medianAge;
-        var familyIncome = this.mapData.getFamilyIncome(geoId);
-        document.getElementById('familyIncome').innerHTML = familyIncome == null ? "-" : familyIncome;
-        var householdIncome = this.mapData.getHouseholdIncome(geoId);
-        document.getElementById('householdIncome').innerHTML = householdIncome == null ? "-" : householdIncome;
-        var perCapitaIncome = this.mapData.getPerCapitaIncome(geoId);
-        document.getElementById('perCapitaIncome').innerHTML = perCapitaIncome == null ? "-" : perCapitaIncome;
-        var housingUnits = this.mapData.getHousingUnitsTotal(geoId);
-        document.getElementById('housingUnits').innerHTML = housingUnits == null ? "-" : housingUnits;
-        var houseValue = this.mapData.getMedianHouseValue(geoId);
-        document.getElementById('houseValue').innerHTML = houseValue == null ? "-" : houseValue;
-        var upperHouseValue = this.mapData.getUpperQuartileHouseValue(geoId);
-        document.getElementById('upperHouseValue').innerHTML = upperHouseValue == null ? "-" : upperHouseValue;
-        var lowerHouseValue = this.mapData.getLowerQuartileHouseValue(geoId);
-        document.getElementById('lowerHouseValue').innerHTML = lowerHouseValue == null ? "-" : lowerHouseValue;
-        var vacancyRate = this.mapData.getVacancyRate(geoId);
-        document.getElementById('vacancyRate').innerHTML = vacancyRate == null ? "-" : vacancyRate + "%";
-        var povertyRate = this.mapData.getPovertyRate(geoId);
-        document.getElementById('povertyRate').innerHTML = povertyRate == null ? "-" : povertyRate + "%";
-        var unemploymentRate = this.mapData.getUnemploymentRate(geoId);
-        document.getElementById('unemploymentRate').innerHTML = unemploymentRate == null ? "-" : unemploymentRate + "%";
+    constructor() {
+        this.geoId = document.getElementById('geoId');
+        this.geoName = document.getElementById('geoName');
+        this.landArea = document.getElementById('landArea');
+        this.waterArea = document.getElementById('waterArea');
+        this.population = document.getElementById('population');
+        this.households = document.getElementById('households');
+        this.medianAge = document.getElementById('medianAge');
+        this.familyIncome = document.getElementById('familyIncome');
+        this.householdIncome = document.getElementById('householdIncome');
+        this.perCapitaIncome = document.getElementById('perCapitaIncome');
+        this.housingUnits = document.getElementById('housingUnits');
+        this.houseValue = document.getElementById('houseValue');
+        this.upperHouseValue = document.getElementById('upperHouseValue');
+        this.lowerHouseValue = document.getElementById('lowerHouseValue');
+        this.vacancyRate = document.getElementById('vacancyRate');
+        this.povertyRate = document.getElementById('povertyRate');
+        this.unemploymentRate = document.getElementById('unemploymentRate');
     }
 
-    clearOverlay() {
-        document.getElementById('geoId').innerHTML = "-";
-        document.getElementById('geoName').innerHTML = "-";
-        document.getElementById('landArea').innerHTML = "-";
-        document.getElementById('waterArea').innerHTML = "-";
-        document.getElementById('population').innerHTML = "-";
-        document.getElementById('households').innerHTML = "-";
-        document.getElementById('medianAge').innerHTML = "-";
-        document.getElementById('familyIncome').innerHTML = "-";
-        document.getElementById('householdIncome').innerHTML = "-";
-        document.getElementById('perCapitaIncome').innerHTML = "-";
-        document.getElementById('housingUnits').innerHTML = "-";
-        document.getElementById('houseValue').innerHTML = "-";
-        document.getElementById('upperHouseValue').innerHTML = "-";
-        document.getElementById('lowerHouseValue').innerHTML = "-";
-        document.getElementById('vacancyRate').innerHTML = "-";
-        document.getElementById('povertyRate').innerHTML = "-";
-        document.getElementById('unemploymentRate').innerHTML = "-";
+    setGeoId(value) {
+        this.geoId.innerHTML = value == null ? "-" : value;
     }
 
-    log(geoId, geoName, landArea, waterArea) {
-        console.log('GEOID: ' + geoId)
-        console.log('CENSUS TRACT: ' + geoName)
-        console.log('LAND SQ MILES: ' + (landArea / 2589988.1103))
-        console.log('WATER SQ MILES: ' + (waterArea / 2589988.1103))
-        console.log("POPULATION: " + this.mapData.getPopulationTotal(geoId))
-        console.log("HOUSEHOLDS: " + this.mapData.getHouseholdTotal(geoId))
-        console.log("MEDIAN AGE: " + this.mapData.getMedianAge(geoId))
-        console.log("FAMILY INCOME: " + this.mapData.getFamilyIncome(geoId))
-        console.log("HOUSEHOLD INCOME: " + this.mapData.getHouseholdIncome(geoId))
-        console.log("PER CAPITA INCOME: " + this.mapData.getPerCapitaIncome(geoId))
-        console.log("HOUSING UNITS: " + this.mapData.getHousingUnitsTotal(geoId))
-        console.log("MEDIAN HOUSE VALUE: " + this.mapData.getMedianHouseValue(geoId))
-        console.log("UPPER QUARTILE HOUSE VALUE: " + this.mapData.getUpperQuartileHouseValue(geoId))
-        console.log("LOWER QUARTILE HOUSE VALUE: " + this.mapData.getLowerQuartileHouseValue(geoId))
-        console.log("VACANCY RATE: " + this.mapData.getVacancyRate(geoId))
-        console.log("POVERTY RATE: " + this.mapData.getPovertyRate(geoId))
-        console.log("UNEMPLOYMENT RATE: " + this.mapData.getUnemploymentRate(geoId))
+    setGeoName(value) {
+        this.geoName.innerHTML = value == null ? "-" : value;
+    }
+
+    setLandArea(value) {
+        this.landArea.innerHTML = value == null ? "-" : (value / 2589988.1103).toFixed(2);
+    }
+
+    setWaterArea(value) {
+        this.waterArea.innerHTML = value == null ? "-" : (value / 2589988.1103).toFixed(2);
+    }
+
+    setPopulation(value) {
+        this.population.innerHTML = value == null ? "-" : value;
+    }
+
+    setHouseholds(value) {
+        this.households.innerHTML = value == null ? "-" : value;
+    }
+
+    setMedianAge(value) {
+        this.medianAge.innerHTML = value == null ? "-" : value;
+    }
+
+    setFamilyIncome(value) {
+        this.familyIncome.innerHTML = value == null ? "-" : value;
+    }
+
+    setHouseholdIncome(value) {
+        this.householdIncome.innerHTML = value == null ? "-" : value;
+    }
+
+    setPerCapitaIncome(value) {
+        this.perCapitaIncome.innerHTML = value == null ? "-" : value;
+    }
+
+    setHousingUnits(value) {
+        this.housingUnits.innerHTML = value == null ? "-" : value;
+    }
+
+    setHouseValue(value) {
+        this.houseValue.innerHTML = value == null ? "-" : value;
+    }
+
+    setUpperHouseValue(value) {
+        this.upperHouseValue.innerHTML = value == null ? "-" : value;
+    }
+
+    setLowerHouseValue(value) {
+        this.lowerHouseValue.innerHTML = value == null ? "-" : value;
+    }
+
+    setVacancyRate(value) {
+        this.vacancyRate.innerHTML = value == null ? "-" : value + "%";
+    }
+
+    setPovertyRate(value) {
+        this.povertyRate.innerHTML = value == null ? "-" : value + "%";
+    }
+
+    setUnemploymentRate(value) {
+        this.unemploymentRate.innerHTML = value == null ? "-" : value + "%";
     }
 }

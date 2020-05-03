@@ -4,8 +4,8 @@ class MapLineChart {
     constructor(domId, title, datasets, labels) {
         var configuation = MapLineChart.makeConfiguration(title, datasets, labels);
         var context = document.getElementById(domId).getContext('2d');
-        context.canvas.width = 500;
-        context.canvas.height = 100;
+        context.canvas.width = 800;
+        context.canvas.height = 200;
         
         this.chart = new Chart(context, configuation);
     }
