@@ -14,9 +14,10 @@ class Map {
         
         this.map.addControl(this.navigationControl);
         document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
-        
+
         var self = this;
         this.map.on('load', function() { 
+            console.log("map loaded: " + self.map.loaded());
             onMapLoaded();
             self.map.resize();
             self.map.scrollZoom.disable();
@@ -75,6 +76,10 @@ class Map {
         });
     }
 
+    setLayerVisibility(layerId, visible) {
+        this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+    }
+
     addMouseMoveHandler(layerId, handler) {
         this.map.on('mousemove', layerId, function(e) { handler(e); });
     }
@@ -116,36 +121,63 @@ class MapController {
         this.polygonUrl = polygonUrl;
         this.hoverId = null;
         this.selectedId = null;
-        this.update = function(geoId, geoName, landArea, waterArea) { onUpdate(geoId, geoName, landArea, waterArea); };
-        this.updateOverlay = function(geoId, geoName, landArea, waterArea) { onUpdateOverlay(geoId, geoName, landArea, waterArea); };
+        this.update = function(geoId) { onUpdate(geoId); };
+        this.updateOverlay = function(geoId) { onUpdateOverlay(geoId); };
         this.clearOverlay = function() { onClearOverlay(); };
         var self = this;
         this.map = new Map(accessToken, centerPoint, function() { self.onMapLoaded(); });
     }
 
     onMapLoaded() {
-        this.map.addPolygons('polygons', this.polygonUrl);
-        
-        this.map.addHoverLayer('hover-layer', 'polygons', '#337AB7');
-        this.map.addSelectedLayer('selected-layer', 'polygons', '#337AB7');
-        this.map.addBorderLayer('border-layer', 'polygons', '#000000');
-
         var self = this;
-        this.map.addMouseMoveHandler('hover-layer', function(e) { self.onMouseMove(e); });
-        this.map.addMouseEnterHandler('hover-layer', function(e) { self.onMouseEnter(e); });
-        this.map.addMouseLeaveHandler('hover-layer', function(e) { self.onMouseLeave(e); });
-        this.map.addMouseClickHandler('hover-layer', function(e) { self.onMouseClick(e); });
+
+// Create a month property value based on time
+// used to filter against.
+//
+        // data.features = data.features.map(function(d) {
+        //     d.properties.month = new Date(d.properties.time).getMonth();
+        //     return d;
+        // });
+            
+        // map.addSource('earthquakes', {
+        //     'type': 'geojson',
+        //     data: data
+        // });
+// https://docs.mapbox.com/mapbox-gl-js/example/timeline-animation/
+
+
+// Save off the data and update it in real time
+//
+// data.features[0].geometry.coordinates.push(
+//     coordinates[i]
+// );
+// map.getSource('trace').setData(data);
+
+        $.ajax({ 'async': true,
+                 'global': false,
+                 'url': this.polygonUrl,
+                 'dataType': "json",
+                 'success': function (data) {
+                    self.map.addPolygons('polygons', data);
+        
+                    self.map.addHoverLayer('hover-layer', 'polygons', '#337AB7');
+                    self.map.addSelectedLayer('selected-layer', 'polygons', '#337AB7');
+                    self.map.addBorderLayer('border-layer', 'polygons', '#000000');
+            
+                    self.map.addMouseMoveHandler('hover-layer', function(e) { self.onMouseMove(e); });
+                    self.map.addMouseEnterHandler('hover-layer', function(e) { self.onMouseEnter(e); });
+                    self.map.addMouseLeaveHandler('hover-layer', function(e) { self.onMouseLeave(e); });
+                    self.map.addMouseClickHandler('hover-layer', function(e) { self.onMouseClick(e); });
+                 }
+        });
     }
 
     onMouseMove(e) {
         if (e.features.length > 0) {
             var newHoverId = e.features[0].id;
             var geoId = e.features[0].properties.GEOID;
-            var geoName = e.features[0].properties.NAME
-            var landArea = e.features[0].properties.ALAND
-            var waterArea = e.features[0].properties.AWATER
             
-            this.updateHover(newHoverId, geoId, geoName, landArea, waterArea)
+            this.updateHover(newHoverId, geoId)
         } else {
             this.clearOverlay()
         }
@@ -167,9 +199,6 @@ class MapController {
     onMouseClick(e) {
         if (e.features.length > 0) {
             var geoId = e.features[0].properties.GEOID;
-            var geoName = e.features[0].properties.NAME
-            var landArea = e.features[0].properties.ALAND
-            var waterArea = e.features[0].properties.AWATER
             var selectedId = e.features[0].id;
             
             if (selectedId != this.selectedId) {
@@ -177,22 +206,26 @@ class MapController {
                     this.map.setSelectedEnabled('polygons', this.selectedId, false);
                 }
                 if (selectedId == this.hoverId) {
-                    this.updateHover(null, geoId, geoName, landArea, waterArea);
+                    this.updateHover(null, geoId);
                 }
                 this.selectedId = selectedId
                 this.map.setSelectedEnabled('polygons', this.selectedId, true);
             } else {
                 this.map.setSelectedEnabled('polygons', this.selectedId, false);
                 this.selectedId = null;
-                this.updateHover(selectedId, geoId, geoName, landArea, waterArea);
+                this.updateHover(selectedId, geoId);
             }
             
-            // this.log(geoId, geoName, landArea, waterArea);
-            this.update(geoId, geoName, landArea, waterArea);
+            if (this.selectedId != null) {
+                this.updateOverlay(geoId)
+            }
+
+            // this.log(geoId);
+            this.update(geoId);
         }
     }
 
-    updateHover(hoverId, geoId, geoName, landArea, waterArea) {
+    updateHover(hoverId, geoId) {
         if (this.hoverId) {
             this.map.setHoverEnabled('polygons', this.hoverId, false);
         }
@@ -202,7 +235,7 @@ class MapController {
         }
         
         if (this.selectedId == null) {
-            this.updateOverlay(geoId, geoName, landArea, waterArea)
+            this.updateOverlay(geoId)
         }
     }
 }
@@ -250,15 +283,15 @@ class MapOverlay {
     }
 
     setGeoName(value) {
-        this.geoName.innerHTML = value == null ? "-" : value;
+        this.geoName.innerHTML = value == null ? "NAME" : value.toUpperCase();
     }
 
     setLandArea(value) {
-        this.landArea.innerHTML = value == null ? "-" : (value / 2589988.1103).toFixed(2);
+        this.landArea.innerHTML = value == null ? "-" : value.toFixed(2);
     }
 
     setWaterArea(value) {
-        this.waterArea.innerHTML = value == null ? "-" : (value / 2589988.1103).toFixed(2);
+        this.waterArea.innerHTML = value == null ? "-" : value.toFixed(2);
     }
 
     setPopulation(value) {

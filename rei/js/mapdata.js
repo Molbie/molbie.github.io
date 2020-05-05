@@ -291,9 +291,89 @@ class Occupancy {
         }
     }
 }
-class GeoTimePeriod {
+class GeoMeta {
     geoId;
     year;
+    geoType;
+    name;
+    nationId;
+    regionId;
+    divisionId;
+    stateId;
+    statisticalAreaId;
+    placeId;
+    countyId;
+    tractId;
+    landArea;
+    waterArea;
+
+    constructor(data) {
+        this.geoId = null;
+        this.year = null;
+        this.geoType = null;
+        this.name = null;
+        this.nationId = null;
+        this.regionId = null;
+        this.divisionId = null;
+        this.stateId = null;
+        this.statisticalAreaId = null;
+        this.placeId = null;
+        this.countyId = null;
+        this.tractId = null;
+        this.landArea = null;
+        this.waterArea = null;
+
+        if (data.meta != null) {
+            if (data.meta.geoId != null) {
+                this.geoId = data.meta.geoId + "";
+            }
+            if (data.meta.year != null) {
+                this.year = parseInt(data.meta.year, 10);
+            }
+            if (data.meta.geoType != null) {
+                this.geoType = data.meta.geoType;
+            }
+            if (data.meta.name != null) {
+                this.name = data.meta.name;
+            }
+            if (data.meta.nationId != null) {
+                this.nationId = data.meta.nationId;
+            }
+            if (data.meta.regionId != null) {
+                this.regionId = data.meta.regionId;
+            }
+            if (data.meta.divisionId != null) {
+                this.divisionId = data.meta.divisionId;
+            }
+            if (data.meta.stateId != null) {
+                this.stateId = data.meta.stateId;
+            }
+            if (data.meta.statisticalAreaId != null) {
+                this.statisticalAreaId = data.meta.statisticalAreaId;
+            }
+            if (data.meta.placeId != null) {
+                this.placeId = data.meta.placeId;
+            }
+            if (data.meta.countyId != null) {
+                this.countyId = data.meta.countyId;
+            }
+            if (data.meta.tractId != null) {
+                this.tractId = data.meta.tractId;
+            }
+            if (data.meta.landArea != null) {
+                this.landArea = parseFloat(data.meta.landArea);
+            }
+            if (data.meta.waterArea != null) {
+                this.waterArea = parseFloat(data.meta.waterArea);
+            }
+        }
+    }
+}
+
+class GeoTimePeriod {
+    geoId; // TODO: remove this in favor of the meta object
+    year;  // TODO: remove this in favor of the meta object
+    meta;
     housingUnits;
     vehicle;
     employment;
@@ -309,6 +389,7 @@ class GeoTimePeriod {
     constructor(geoId, year, data) {
         this.geoId = geoId + "";
         this.year = parseInt(year, 10);
+        this.meta = new GeoMeta(data);
         this.housingUnits = new HousingUnits(data);
         this.vehicle = new Vehicle(data);
         this.employment = new Employment(data);
@@ -320,15 +401,6 @@ class GeoTimePeriod {
         this.income = new Income(data);
         this.houseValue = new HouseValue(data);
         this.occupancy = new Occupancy(data);
-
-        if (data.meta != null) {
-            if (data.meta.geoId != null) {
-                this.geoId = data.meta.geoId + "";
-            }
-            if (data.meta.year != null) {
-                this.year = parseInt(data.meta.year, 10);
-            }
-        }
     }
 }
 class GeoData {
@@ -356,6 +428,75 @@ class GeoData {
         } else {
             return new GeoTimePeriod(null, null, {});
         }
+    }
+
+    getName(year) {
+        var result = null;
+        
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            result = timePeriod.meta.name;
+        } else {
+            for (const year of GeoData.years) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.meta.name != null) {
+                    result = timePeriod.meta.name;
+                }
+                
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    getLandArea(year) {
+        var result = null;
+        
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            result = timePeriod.meta.landArea;
+        } else {
+            for (const year of GeoData.years) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.meta.landArea != null) {
+                    result = timePeriod.meta.landArea;
+                }
+                
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    getWaterArea(year) {
+        var result = null;
+        
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            result = timePeriod.meta.waterArea;
+        } else {
+            for (const year of GeoData.years) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.meta.waterArea != null) {
+                    result = timePeriod.meta.waterArea;
+                }
+                
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     getPopulationTotal(year) {
@@ -724,6 +865,21 @@ class MapData {
     getGeoData(geoId) {
         var geoData = this.data[geoId];
         return geoData ?? new GeoData(null);
+    }
+
+    getName(geoId) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getName(null);
+    }
+
+    getLandArea(geoId) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getLandArea(null);
+    }
+
+    getWaterArea(geoId) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getWaterArea(null);
     }
 
     getPopulationTotal(geoId) {

@@ -85,7 +85,7 @@
                         <div id="geocoder" class="geocoder"></div>
                         <div class="map-overlay">
                             <div id="mapOverlayContent">
-                                <p><strong>GEOGRAPHY</strong><br /><span>ID: </span><span id="geoId">-</span><br /><span>Name: </span><span id="geoName">-</span><br /><span>Land Sq Miles: </span><span id="landArea">-</span><br /><span>Water Sq Miles: </span><span id="waterArea">-</span></p>
+                                <p><strong id="geoName">NAME</strong><br /><span>ID: </span><span id="geoId">-</span><br /><span>Land Sq Miles: </span><span id="landArea">-</span><br /><span>Water Sq Miles: </span><span id="waterArea">-</span></p>
                                 <p><strong>POPULATION</strong><br /><span>Total: </span><span id="population">-</span></p>
                                 <p><strong>HOUSEHOLDS</strong><br /><span>Total: </span><span id="households">-</span></p>
                                 <p><strong>INCOME</strong><br /><span>Family: </span><span id="familyIncome">-</span><br /><span>Household: </span><span id="householdIncome">-</span><br /><span>Per Capita: </span><span id="perCapitaIncome">-</span></p>
@@ -160,15 +160,15 @@
                 ruleEngine.addHouseValueGrowthRules();
                 var mapCharts = new MapCharts();
                 var overlay = new MapOverlay();
-                var onUpdate = function(geoId, geoName, landArea, waterArea) {
+                var onUpdate = function(geoId) {
                     var geoData = mapData.getGeoData(geoId);
                     mapCharts.update(geoData);
                 };
-                var onUpdateOverlay = function(geoId, geoName, landArea, waterArea) {
+                var onUpdateOverlay = function(geoId) {
                     overlay.setGeoId(geoId);
-                    overlay.setGeoName(geoName);
-                    overlay.setLandArea(landArea);
-                    overlay.setWaterArea(waterArea);
+                    overlay.setGeoName(mapData.getName(geoId));
+                    overlay.setLandArea(mapData.getLandArea(geoId));
+                    overlay.setWaterArea(mapData.getWaterArea(geoId));
                     overlay.setPopulation(mapData.getPopulationTotal(geoId));
                     overlay.setHouseholds(mapData.getHouseholdTotal(geoId));
                     overlay.setMedianAge(mapData.getMedianAge(geoId));
