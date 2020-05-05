@@ -26,11 +26,13 @@ class Map {
         this.map.addSource(sourceId, {'type': 'geojson', 'data': url});
     }
     
-    addDensityLayer(id, sourceId, numerator, denominator, minValue, maxValue, startColor, endColor) {
+    addDensityLayer(id, sourceId, numerator, denominator, minValue, maxValue, startColor, endColor, minZoom, maxZoom) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
+            'minzoom': minZoom,
+            'maxzoom': maxZoom,
             'layout': {},
             'paint': {
                 'fill-color': [
@@ -52,28 +54,32 @@ class Map {
         });
     }
 
-    addHoverLayer(id, sourceId, color) {
+    addHoverLayer(id, sourceId, color, minZoom, maxZoom) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
+            'minzoom': minZoom,
+            'maxzoom': maxZoom,
             'layout': {},
             'paint': {
                 'fill-color': color,
                 'fill-opacity': ['case',
                                  ['boolean', ['feature-state', 'hover'], false],
                                  0.6,
-                                 0.1
+                                 0
                                 ]
                 }
         });
     }
 
-    addSelectedLayer(id, sourceId, color) {
+    addSelectedLayer(id, sourceId, color, minZoom, maxZoom) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
+            'minzoom': minZoom,
+            'maxzoom': maxZoom,
             'layout': {},
             'paint': {
                 'fill-color': color,
@@ -86,11 +92,13 @@ class Map {
         });
     }
 
-    addBorderLayer(id, sourceId, color) {
+    addBorderLayer(id, sourceId, color, minZoom, maxZoom) {
         this.map.addLayer({
             'id': id,
             'type': 'line',
             'source': sourceId,
+            'minzoom': minZoom,
+            'maxzoom': maxZoom,
             'layout': {},
             'paint': {
                 'line-color': color,
@@ -240,8 +248,7 @@ class MapOverlay {
     }
 }
 class MapController {
-    geography;
-    polygonUrl;
+    urlPrefix;
     hoverId;
     selectedId;
     overlay;
@@ -251,13 +258,12 @@ class MapController {
     ruleEngine;
     mapData;
 
-    constructor(accessToken, geography, geoId, urlPrefix, centerPoint) {
+    constructor(accessToken, geoId, urlPrefix, centerPoint) {
         var self = this;
         
-        this.geography = geography;
-        this.polygonUrl = urlPrefix + geography + "/polygons/" + geoId + ".json";
-        this.hoverId = null;
-        this.selectedId = null;
+        this.urlPrefix = urlPrefix;
+        this.hoverId = {};
+        this.selectedId = {};
         this.overlay = new MapOverlay();
         this.map = new Map(accessToken, centerPoint);
         this.mapCharts = new MapCharts();
@@ -266,24 +272,44 @@ class MapController {
         this.ruleEngine.addPopulationGrowthRules();
         this.ruleEngine.addHouseholdMedianIncomeGrowthRules();
         this.ruleEngine.addHouseValueGrowthRules();
-        this.mapData = new MapData(geography, geoId, urlPrefix, function(geography) { self.loadMap(geography); });
+        this.mapData = {};
+        this.mapData[CensusGeography.nation] = new MapData(CensusGeography.nation, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
+        this.mapData[CensusGeography.region] = new MapData(CensusGeography.region, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
+        this.mapData[CensusGeography.division] = new MapData(CensusGeography.division, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
+        this.mapData[CensusGeography.state] = new MapData(CensusGeography.state, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
+        this.mapData[CensusGeography.statisticalArea] = new MapData(CensusGeography.statisticalArea, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
+        this.mapData[CensusGeography.place] = new MapData(CensusGeography.place, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
+        this.mapData[CensusGeography.county] = new MapData(CensusGeography.county, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
+        this.mapData[CensusGeography.tract] = new MapData(CensusGeography.tract, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
     }
 
-    loadMap(geography) {
+    loadMap(geography, geoId) {
         var self = this;
-        
+
+        var polygonUrl = self.urlPrefix + geography + "/polygons/" + geoId + ".json";
         $.ajax({ 'async': true,
                  'global': false,
-                 'url': this.polygonUrl,
+                 'url': polygonUrl,
                  'dataType': "json",
                  'success': function (data) {
-                    var totalPopulation = self.mapData.getAllPopulation();
-                    var totalLandArea = self.mapData.getAllLandArea();
+                    var totalPopulation = self.mapData[geography].getAllPopulation();
+                    var totalLandArea = self.mapData[geography].getAllLandArea();
 
                     data.features = data.features.map(function(d) {
                         var geoId = d.properties.GEOID;
-                        var population = self.mapData.getPopulationTotal(geoId);
-                        var landArea = self.mapData.getLandArea(geoId);
+                        if (geoId == "US") {
+                            geoId = "";
+                        }
+                        var population = self.mapData[geography].getPopulationTotal(geoId);
+                        var landArea = self.mapData[geography].getLandArea(geoId);
+                        if (geography == CensusGeography.nation) {
+                            if (totalLandArea == 0) {
+                                totalLandArea = 1;
+                            }
+                            if (landArea == null) {
+                                landArea = 1;
+                            }
+                        }
                         
                         d.properties.population = population / totalPopulation;
                         d.properties.landArea = landArea / totalLandArea;
@@ -292,112 +318,162 @@ class MapController {
 
                     self.map.addPolygons(geography + '-polygons', data);
                     
-                    self.map.addDensityLayer(geography + 'population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C");
-                    self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888');
-                    self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888');
-                    self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000');
+                    var minZoom = self.minMapZoomLevel(geography);
+                    var maxZoom = self.maxMapZoomLevel(geography);
 
-                    self.map.addMouseMoveHandler(geography + '-hover-layer', function(e) { self.onMouseMove(e); });
-                    self.map.addMouseEnterHandler(geography + '-hover-layer', function(e) { self.onMouseEnter(e); });
-                    self.map.addMouseLeaveHandler(geography + '-hover-layer', function(e) { self.onMouseLeave(e); });
-                    self.map.addMouseClickHandler(geography + '-hover-layer', function(e) { self.onMouseClick(e); });
+                    self.map.addDensityLayer(geography + 'population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C", minZoom, maxZoom);
+                    self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888', minZoom, maxZoom);
+                    self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888', minZoom, maxZoom);
+                    self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000', minZoom, maxZoom);
+
+                    self.map.addMouseMoveHandler(geography + '-hover-layer', function(e) { self.onMouseMove(e, geography); });
+                    self.map.addMouseEnterHandler(geography + '-hover-layer', function(e) { self.onMouseEnter(e, geography); });
+                    self.map.addMouseLeaveHandler(geography + '-hover-layer', function(e) { self.onMouseLeave(e, geography); });
+                    self.map.addMouseClickHandler(geography + '-hover-layer', function(e) { self.onMouseClick(e, geography); });
                  }
         });
     }
 
-    onMouseMove(e) {
+    minMapZoomLevel(geography) {
+        switch (geography) {
+            case CensusGeography.nation:
+                return 0;
+            case CensusGeography.region:
+                return 2;
+            case CensusGeography.division:
+                return 3;
+            case CensusGeography.state:
+                return 4;
+            case CensusGeography.statisticalArea:
+                return 5;
+            case CensusGeography.county:
+                return 6;
+            case CensusGeography.place:
+                return 8;
+            case CensusGeography.tract:
+                return 10;
+        }
+    }
+
+    maxMapZoomLevel(geography) {
+        switch (geography) {
+            case CensusGeography.nation:
+                return 2;
+            case CensusGeography.region:
+                return 3;
+            case CensusGeography.division:
+                return 4;
+            case CensusGeography.state:
+                return 5;
+            case CensusGeography.statisticalArea:
+                return 6;
+            case CensusGeography.county:
+                return 8;
+            case CensusGeography.place:
+                return 10;
+            case CensusGeography.tract:
+                return 14;
+        }
+    }
+
+    onMouseMove(e, geography) {
         if (e.features.length > 0) {
             var newHoverId = e.features[0].id;
             var geoId = e.features[0].properties.GEOID;
+            if (geoId == "US") {
+                geoId = "";
+            }
             
-            this.updateHover(newHoverId, geoId)
+            this.updateHover(newHoverId, geoId, geography)
         } else {
             this.clearOverlay()
         }
     }
 
-    onMouseEnter(e) {
+    onMouseEnter(e, geography) {
         this.map.setMousePointerEnabled(true);
     }
 
-    onMouseLeave(e) {
+    onMouseLeave(e, geography) {
         this.map.setMousePointerEnabled(false);
         
-        if (this.hoverId) {
-            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, false);
+        if (this.hoverId[geography]) {
+            this.map.setHoverEnabled(geography + '-polygons', this.hoverId[geography], false);
         }
-        this.hoverId = null;
+        this.hoverId[geography] = null;
     }
 
-    onMouseClick(e) {
+    onMouseClick(e, geography) {
         if (e.features.length > 0) {
             var geoId = e.features[0].properties.GEOID;
+            if (geoId == "US") {
+                geoId = "";
+            }
             var selectedId = e.features[0].id;
             
-            if (selectedId != this.selectedId) {
-                if (this.selectedId) {
-                    this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, false);
+            if (selectedId != this.selectedId[geography]) {
+                if (this.selectedId[geography]) {
+                    this.map.setSelectedEnabled(geography + '-polygons', this.selectedId[geography], false);
                 }
-                if (selectedId == this.hoverId) {
-                    this.updateHover(null, geoId);
+                if (selectedId == this.hoverId[geography]) {
+                    this.updateHover(null, geoId, geography);
                 }
-                this.selectedId = selectedId
-                this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, true);
+                this.selectedId[geography] = selectedId
+                this.map.setSelectedEnabled(geography + '-polygons', this.selectedId[geography], true);
             } else {
-                this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, false);
-                this.selectedId = null;
-                this.updateHover(selectedId, geoId);
+                this.map.setSelectedEnabled(geography + '-polygons', this.selectedId[geography], false);
+                this.selectedId[geography] = null;
+                this.updateHover(selectedId, geoId, geography);
             }
             
-            if (this.selectedId != null) {
-                this.updateOverlay(geoId)
+            if (this.selectedId[geography] != null) {
+                this.updateOverlay(geoId, geography);
             }
 
-            // this.log(geoId);
-            this.update(geoId);
+            this.update(geoId, geography);
         }
     }
 
-    updateHover(hoverId, geoId) {
-        if (this.hoverId) {
-            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, false);
+    updateHover(hoverId, geoId, geography) {
+        if (this.hoverId[geography]) {
+            this.map.setHoverEnabled(geography + '-polygons', this.hoverId[geography], false);
         }
-        this.hoverId = hoverId
-        if (this.hoverId != this.selectedId) {
-            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, true);
+        this.hoverId[geography] = hoverId
+        if (this.hoverId[geography] != this.selectedId[geography]) {
+            this.map.setHoverEnabled(geography + '-polygons', this.hoverId[geography], true);
         }
         
-        if (this.selectedId == null) {
-            this.updateOverlay(geoId)
+        if (this.selectedId[geography] == null) {
+            this.updateOverlay(geoId, geography);
         }
     }
 
-    update(geoId) {
-        var geoData = this.mapData.getGeoData(geoId);
+    update(geoId, geography) {
+        var geoData = this.mapData[geography].getGeoData(geoId);
         this.mapCharts.update(geoData);
     }
 
-    updateOverlay(geoId) {
+    updateOverlay(geoId, geography) {
         this.overlay.setGeoId(geoId);
-        this.overlay.setGeoName(this.mapData.getName(geoId));
-        this.overlay.setLandArea(this.mapData.getLandArea(geoId));
-        this.overlay.setWaterArea(this.mapData.getWaterArea(geoId));
-        this.overlay.setPopulation(this.mapData.getPopulationTotal(geoId));
-        this.overlay.setHouseholds(this.mapData.getHouseholdTotal(geoId));
-        this.overlay.setMedianAge(this.mapData.getMedianAge(geoId));
-        this.overlay.setFamilyIncome(this.mapData.getFamilyIncome(geoId));
-        this.overlay.setHouseholdIncome(this.mapData.getHouseholdIncome(geoId));
-        this.overlay.setPerCapitaIncome(this.mapData.getPerCapitaIncome(geoId));
-        this.overlay.setHousingUnits(this.mapData.getHousingUnitsTotal(geoId));
-        this.overlay.setHouseValue(this.mapData.getMedianHouseValue(geoId));
-        this.overlay.setUpperHouseValue(this.mapData.getUpperQuartileHouseValue(geoId));
-        this.overlay.setLowerHouseValue(this.mapData.getLowerQuartileHouseValue(geoId));
-        this.overlay.setVacancyRate(this.mapData.getVacancyRate(geoId));
-        this.overlay.setPovertyRate(this.mapData.getPovertyRate(geoId));
-        this.overlay.setUnemploymentRate(this.mapData.getUnemploymentRate(geoId));
+        this.overlay.setGeoName(this.mapData[geography].getName(geoId));
+        this.overlay.setLandArea(this.mapData[geography].getLandArea(geoId));
+        this.overlay.setWaterArea(this.mapData[geography].getWaterArea(geoId));
+        this.overlay.setPopulation(this.mapData[geography].getPopulationTotal(geoId));
+        this.overlay.setHouseholds(this.mapData[geography].getHouseholdTotal(geoId));
+        this.overlay.setMedianAge(this.mapData[geography].getMedianAge(geoId));
+        this.overlay.setFamilyIncome(this.mapData[geography].getFamilyIncome(geoId));
+        this.overlay.setHouseholdIncome(this.mapData[geography].getHouseholdIncome(geoId));
+        this.overlay.setPerCapitaIncome(this.mapData[geography].getPerCapitaIncome(geoId));
+        this.overlay.setHousingUnits(this.mapData[geography].getHousingUnitsTotal(geoId));
+        this.overlay.setHouseValue(this.mapData[geography].getMedianHouseValue(geoId));
+        this.overlay.setUpperHouseValue(this.mapData[geography].getUpperQuartileHouseValue(geoId));
+        this.overlay.setLowerHouseValue(this.mapData[geography].getLowerQuartileHouseValue(geoId));
+        this.overlay.setVacancyRate(this.mapData[geography].getVacancyRate(geoId));
+        this.overlay.setPovertyRate(this.mapData[geography].getPovertyRate(geoId));
+        this.overlay.setUnemploymentRate(this.mapData[geography].getUnemploymentRate(geoId));
 
-        var geoData = this.mapData.getGeoData(geoId);
-        var grades = this.ruleEngine.evaluate(this.geography, geoData);
+        var geoData = this.mapData[geography].getGeoData(geoId);
+        var grades = this.ruleEngine.evaluate(geography, geoData);
         this.reportCard.applyGrades(grades);
     }
 

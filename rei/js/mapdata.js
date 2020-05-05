@@ -906,7 +906,6 @@ class MapData {
             }
         }
 
-        console.log("all population: " + result);
         return result;
     }
 
@@ -922,7 +921,6 @@ class MapData {
             }
         }
 
-        console.log("all landArea: " + result);
         return result;
     }
 
