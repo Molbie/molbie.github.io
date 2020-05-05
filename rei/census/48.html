@@ -141,77 +141,19 @@
         <script src="https://molbie.co/rei/js/template.js"></script>
         <script src="https://molbie.co/rei/js/math.js"></script>
         <script src="https://molbie.co/rei/js/census.js"></script>
-        <script src="https://molbie.co/rei/js/mapdata.js"></script>
-        <script src="https://molbie.co/rei/js/mapcontroller.js"></script>
-        <script src="https://molbie.co/rei/js/mapcharts.js"></script>
         <script src="https://molbie.co/rei/js/rules.js"></script>
+        <script src="https://molbie.co/rei/js/mapdata.js"></script>
+        <script src="https://molbie.co/rei/js/mapcharts.js"></script>
+        <script src="https://molbie.co/rei/js/mapcontroller.js"></script>
         <script>
             $(window).load(function() {
                 'use strict';
-
-                var geography = CensusGeography.tract;
-                var urlPrefix = "https://molbie.co/rei/census/" + geography;
-                var geoId = "48";
-                var mapData = new MapData(geoId, urlPrefix + "/data/");
-                var reportCard = new ReportCard(RuleGradingSystem.letters);
-                var ruleEngine = new RuleEngine();
-                ruleEngine.addPopulationGrowthRules();
-                ruleEngine.addHouseholdMedianIncomeGrowthRules();
-                ruleEngine.addHouseValueGrowthRules();
-                var mapCharts = new MapCharts();
-                var overlay = new MapOverlay();
-                var onUpdate = function(geoId) {
-                    var geoData = mapData.getGeoData(geoId);
-                    mapCharts.update(geoData);
-                };
-                var onUpdateOverlay = function(geoId) {
-                    overlay.setGeoId(geoId);
-                    overlay.setGeoName(mapData.getName(geoId));
-                    overlay.setLandArea(mapData.getLandArea(geoId));
-                    overlay.setWaterArea(mapData.getWaterArea(geoId));
-                    overlay.setPopulation(mapData.getPopulationTotal(geoId));
-                    overlay.setHouseholds(mapData.getHouseholdTotal(geoId));
-                    overlay.setMedianAge(mapData.getMedianAge(geoId));
-                    overlay.setFamilyIncome(mapData.getFamilyIncome(geoId));
-                    overlay.setHouseholdIncome(mapData.getHouseholdIncome(geoId));
-                    overlay.setPerCapitaIncome(mapData.getPerCapitaIncome(geoId));
-                    overlay.setHousingUnits(mapData.getHousingUnitsTotal(geoId));
-                    overlay.setHouseValue(mapData.getMedianHouseValue(geoId));
-                    overlay.setUpperHouseValue(mapData.getUpperQuartileHouseValue(geoId));
-                    overlay.setLowerHouseValue(mapData.getLowerQuartileHouseValue(geoId));
-                    overlay.setVacancyRate(mapData.getVacancyRate(geoId));
-                    overlay.setPovertyRate(mapData.getPovertyRate(geoId));
-                    overlay.setUnemploymentRate(mapData.getUnemploymentRate(geoId));
-
-                    var geoData = mapData.getGeoData(geoId);
-                    var grades = ruleEngine.evaluate(geography, geoData);
-                    reportCard.applyGrades(grades);
-                };
-                var onClearOverlay = function() {
-                    overlay.setGeoId(null);
-                    overlay.setGeoName(null);
-                    overlay.setLandArea(null);
-                    overlay.setWaterArea(null);
-                    overlay.setPopulation(null);
-                    overlay.setHouseholds(null);
-                    overlay.setMedianAge(null);
-                    overlay.setFamilyIncome(null);
-                    overlay.setHouseholdIncome(null);
-                    overlay.setPerCapitaIncome(null);
-                    overlay.setHousingUnits(null);
-                    overlay.setHouseValue(null);
-                    overlay.setUpperHouseValue(null);
-                    overlay.setLowerHouseValue(null);
-                    overlay.setVacancyRate(null);
-                    overlay.setPovertyRate(null);
-                    overlay.setUnemploymentRate(null);
-                };
+                
                 var mapController = new MapController("pk.eyJ1IjoicHJvZ3JhbW1lci1icmlhbiIsImEiOiJjajF5YmNleHQwMGNhMnFxa3dvaHZmaDZjIn0.NQfth9E2BbhzMBSkQMv0JA", 
-                                                      urlPrefix + "/polygons/" + geoId + ".json", 
-                                                      [-99.9018, 31.9686], 
-                                                      onUpdate,
-                                                      onUpdateOverlay,
-                                                      onClearOverlay);
+                                                      CensusGeography.tract,
+                                                      "48", 
+                                                      "https://molbie.co/rei/census/", 
+                                                      [-99.9018, 31.9686]);
             });
         </script>
     </body>

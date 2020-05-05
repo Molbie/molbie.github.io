@@ -4,7 +4,7 @@ class Map {
     geocoder;
     map;
 
-    constructor(accessToken, centerPoint, onMapLoaded) {
+    constructor(accessToken, centerPoint) {
         mapboxgl.accessToken = accessToken;
 
         this.centerPoint = centerPoint;
@@ -17,8 +17,6 @@ class Map {
 
         var self = this;
         this.map.on('load', function() { 
-            console.log("map loaded: " + self.map.loaded());
-            onMapLoaded();
             self.map.resize();
             self.map.scrollZoom.disable();
         });
@@ -26,6 +24,32 @@ class Map {
 
     addPolygons(sourceId, url) {
         this.map.addSource(sourceId, {'type': 'geojson', 'data': url});
+    }
+    
+    addDensityLayer(id, sourceId, numerator, denominator, minValue, maxValue, startColor, endColor) {
+        this.map.addLayer({
+            'id': id,
+            'type': 'fill',
+            'source': sourceId,
+            'layout': {},
+            'paint': {
+                'fill-color': [
+                    'let',
+                    'density',
+                    ['/', ['get', numerator], ['get', denominator]],
+                    [
+                        'interpolate',
+                        ['linear'],
+                        ['var', 'density'],
+                        minValue,
+                        ['to-color', startColor],
+                        maxValue,
+                        ['to-color', endColor]
+                    ]
+                ],
+                'fill-opacity': 0.7
+                }
+        });
     }
 
     addHoverLayer(id, sourceId, color) {
@@ -106,137 +130,6 @@ class Map {
 
     setMousePointerEnabled(enabled) {
         this.map.getCanvas().style.cursor = enabled ? 'pointer' : '';
-    }
-}
-class MapController {
-    polygonUrl;
-    hoverId;
-    selectedId;
-    update;
-    updateOverlay;
-    clearOverlay;
-    map;
-
-    constructor(accessToken, polygonUrl, centerPoint, onUpdate, onUpdateOverlay, onClearOverlay) {
-        this.polygonUrl = polygonUrl;
-        this.hoverId = null;
-        this.selectedId = null;
-        this.update = function(geoId) { onUpdate(geoId); };
-        this.updateOverlay = function(geoId) { onUpdateOverlay(geoId); };
-        this.clearOverlay = function() { onClearOverlay(); };
-        var self = this;
-        this.map = new Map(accessToken, centerPoint, function() { self.onMapLoaded(); });
-    }
-
-    onMapLoaded() {
-        var self = this;
-
-// Create a month property value based on time
-// used to filter against.
-//
-        // data.features = data.features.map(function(d) {
-        //     d.properties.month = new Date(d.properties.time).getMonth();
-        //     return d;
-        // });
-            
-        // map.addSource('earthquakes', {
-        //     'type': 'geojson',
-        //     data: data
-        // });
-// https://docs.mapbox.com/mapbox-gl-js/example/timeline-animation/
-
-
-// Save off the data and update it in real time
-//
-// data.features[0].geometry.coordinates.push(
-//     coordinates[i]
-// );
-// map.getSource('trace').setData(data);
-
-        $.ajax({ 'async': true,
-                 'global': false,
-                 'url': this.polygonUrl,
-                 'dataType': "json",
-                 'success': function (data) {
-                    self.map.addPolygons('polygons', data);
-        
-                    self.map.addHoverLayer('hover-layer', 'polygons', '#337AB7');
-                    self.map.addSelectedLayer('selected-layer', 'polygons', '#337AB7');
-                    self.map.addBorderLayer('border-layer', 'polygons', '#000000');
-            
-                    self.map.addMouseMoveHandler('hover-layer', function(e) { self.onMouseMove(e); });
-                    self.map.addMouseEnterHandler('hover-layer', function(e) { self.onMouseEnter(e); });
-                    self.map.addMouseLeaveHandler('hover-layer', function(e) { self.onMouseLeave(e); });
-                    self.map.addMouseClickHandler('hover-layer', function(e) { self.onMouseClick(e); });
-                 }
-        });
-    }
-
-    onMouseMove(e) {
-        if (e.features.length > 0) {
-            var newHoverId = e.features[0].id;
-            var geoId = e.features[0].properties.GEOID;
-            
-            this.updateHover(newHoverId, geoId)
-        } else {
-            this.clearOverlay()
-        }
-    }
-
-    onMouseEnter(e) {
-        this.map.setMousePointerEnabled(true);
-    }
-
-    onMouseLeave(e) {
-        this.map.setMousePointerEnabled(false);
-        
-        if (this.hoverId) {
-            this.map.setHoverEnabled('polygons', this.hoverId, false);
-        }
-        this.hoverId = null;
-    }
-
-    onMouseClick(e) {
-        if (e.features.length > 0) {
-            var geoId = e.features[0].properties.GEOID;
-            var selectedId = e.features[0].id;
-            
-            if (selectedId != this.selectedId) {
-                if (this.selectedId) {
-                    this.map.setSelectedEnabled('polygons', this.selectedId, false);
-                }
-                if (selectedId == this.hoverId) {
-                    this.updateHover(null, geoId);
-                }
-                this.selectedId = selectedId
-                this.map.setSelectedEnabled('polygons', this.selectedId, true);
-            } else {
-                this.map.setSelectedEnabled('polygons', this.selectedId, false);
-                this.selectedId = null;
-                this.updateHover(selectedId, geoId);
-            }
-            
-            if (this.selectedId != null) {
-                this.updateOverlay(geoId)
-            }
-
-            // this.log(geoId);
-            this.update(geoId);
-        }
-    }
-
-    updateHover(hoverId, geoId) {
-        if (this.hoverId) {
-            this.map.setHoverEnabled('polygons', this.hoverId, false);
-        }
-        this.hoverId = hoverId
-        if (this.hoverId != this.selectedId) {
-            this.map.setHoverEnabled('polygons', this.hoverId, true);
-        }
-        
-        if (this.selectedId == null) {
-            this.updateOverlay(geoId)
-        }
     }
 }
 class MapOverlay {
@@ -344,5 +237,187 @@ class MapOverlay {
 
     setUnemploymentRate(value) {
         this.unemploymentRate.innerHTML = value == null ? "-" : value + "%";
+    }
+}
+class MapController {
+    geography;
+    polygonUrl;
+    hoverId;
+    selectedId;
+    overlay;
+    map;
+    mapCharts;
+    reportCard;
+    ruleEngine;
+    mapData;
+
+    constructor(accessToken, geography, geoId, urlPrefix, centerPoint) {
+        var self = this;
+        
+        this.geography = geography;
+        this.polygonUrl = urlPrefix + geography + "/polygons/" + geoId + ".json";
+        this.hoverId = null;
+        this.selectedId = null;
+        this.overlay = new MapOverlay();
+        this.map = new Map(accessToken, centerPoint);
+        this.mapCharts = new MapCharts();
+        this.reportCard = new ReportCard(RuleGradingSystem.letters);
+        this.ruleEngine = new RuleEngine(); 
+        this.ruleEngine.addPopulationGrowthRules();
+        this.ruleEngine.addHouseholdMedianIncomeGrowthRules();
+        this.ruleEngine.addHouseValueGrowthRules();
+        this.mapData = new MapData(geography, geoId, urlPrefix, function(geography) { self.loadMap(geography); });
+    }
+
+    loadMap(geography) {
+        var self = this;
+        
+        $.ajax({ 'async': true,
+                 'global': false,
+                 'url': this.polygonUrl,
+                 'dataType': "json",
+                 'success': function (data) {
+                    var totalPopulation = self.mapData.getAllPopulation();
+                    var totalLandArea = self.mapData.getAllLandArea();
+
+                    data.features = data.features.map(function(d) {
+                        var geoId = d.properties.GEOID;
+                        var population = self.mapData.getPopulationTotal(geoId);
+                        var landArea = self.mapData.getLandArea(geoId);
+                        
+                        d.properties.population = population / totalPopulation;
+                        d.properties.landArea = landArea / totalLandArea;
+                        return d;
+                    });
+
+                    self.map.addPolygons(geography + '-polygons', data);
+                    
+                    self.map.addDensityLayer(geography + 'population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C");
+                    self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888');
+                    self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888');
+                    self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000');
+
+                    self.map.addMouseMoveHandler(geography + '-hover-layer', function(e) { self.onMouseMove(e); });
+                    self.map.addMouseEnterHandler(geography + '-hover-layer', function(e) { self.onMouseEnter(e); });
+                    self.map.addMouseLeaveHandler(geography + '-hover-layer', function(e) { self.onMouseLeave(e); });
+                    self.map.addMouseClickHandler(geography + '-hover-layer', function(e) { self.onMouseClick(e); });
+                 }
+        });
+    }
+
+    onMouseMove(e) {
+        if (e.features.length > 0) {
+            var newHoverId = e.features[0].id;
+            var geoId = e.features[0].properties.GEOID;
+            
+            this.updateHover(newHoverId, geoId)
+        } else {
+            this.clearOverlay()
+        }
+    }
+
+    onMouseEnter(e) {
+        this.map.setMousePointerEnabled(true);
+    }
+
+    onMouseLeave(e) {
+        this.map.setMousePointerEnabled(false);
+        
+        if (this.hoverId) {
+            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, false);
+        }
+        this.hoverId = null;
+    }
+
+    onMouseClick(e) {
+        if (e.features.length > 0) {
+            var geoId = e.features[0].properties.GEOID;
+            var selectedId = e.features[0].id;
+            
+            if (selectedId != this.selectedId) {
+                if (this.selectedId) {
+                    this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, false);
+                }
+                if (selectedId == this.hoverId) {
+                    this.updateHover(null, geoId);
+                }
+                this.selectedId = selectedId
+                this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, true);
+            } else {
+                this.map.setSelectedEnabled(this.geography + '-polygons', this.selectedId, false);
+                this.selectedId = null;
+                this.updateHover(selectedId, geoId);
+            }
+            
+            if (this.selectedId != null) {
+                this.updateOverlay(geoId)
+            }
+
+            // this.log(geoId);
+            this.update(geoId);
+        }
+    }
+
+    updateHover(hoverId, geoId) {
+        if (this.hoverId) {
+            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, false);
+        }
+        this.hoverId = hoverId
+        if (this.hoverId != this.selectedId) {
+            this.map.setHoverEnabled(this.geography + '-polygons', this.hoverId, true);
+        }
+        
+        if (this.selectedId == null) {
+            this.updateOverlay(geoId)
+        }
+    }
+
+    update(geoId) {
+        var geoData = this.mapData.getGeoData(geoId);
+        this.mapCharts.update(geoData);
+    }
+
+    updateOverlay(geoId) {
+        this.overlay.setGeoId(geoId);
+        this.overlay.setGeoName(this.mapData.getName(geoId));
+        this.overlay.setLandArea(this.mapData.getLandArea(geoId));
+        this.overlay.setWaterArea(this.mapData.getWaterArea(geoId));
+        this.overlay.setPopulation(this.mapData.getPopulationTotal(geoId));
+        this.overlay.setHouseholds(this.mapData.getHouseholdTotal(geoId));
+        this.overlay.setMedianAge(this.mapData.getMedianAge(geoId));
+        this.overlay.setFamilyIncome(this.mapData.getFamilyIncome(geoId));
+        this.overlay.setHouseholdIncome(this.mapData.getHouseholdIncome(geoId));
+        this.overlay.setPerCapitaIncome(this.mapData.getPerCapitaIncome(geoId));
+        this.overlay.setHousingUnits(this.mapData.getHousingUnitsTotal(geoId));
+        this.overlay.setHouseValue(this.mapData.getMedianHouseValue(geoId));
+        this.overlay.setUpperHouseValue(this.mapData.getUpperQuartileHouseValue(geoId));
+        this.overlay.setLowerHouseValue(this.mapData.getLowerQuartileHouseValue(geoId));
+        this.overlay.setVacancyRate(this.mapData.getVacancyRate(geoId));
+        this.overlay.setPovertyRate(this.mapData.getPovertyRate(geoId));
+        this.overlay.setUnemploymentRate(this.mapData.getUnemploymentRate(geoId));
+
+        var geoData = this.mapData.getGeoData(geoId);
+        var grades = this.ruleEngine.evaluate(this.geography, geoData);
+        this.reportCard.applyGrades(grades);
+    }
+
+    clearOverlay() {
+        this.overlay.setGeoId(null);
+        this.overlay.setGeoName(null);
+        this.overlay.setLandArea(null);
+        this.overlay.setWaterArea(null);
+        this.overlay.setPopulation(null);
+        this.overlay.setHouseholds(null);
+        this.overlay.setMedianAge(null);
+        this.overlay.setFamilyIncome(null);
+        this.overlay.setHouseholdIncome(null);
+        this.overlay.setPerCapitaIncome(null);
+        this.overlay.setHousingUnits(null);
+        this.overlay.setHouseValue(null);
+        this.overlay.setUpperHouseValue(null);
+        this.overlay.setLowerHouseValue(null);
+        this.overlay.setVacancyRate(null);
+        this.overlay.setPovertyRate(null);
+        this.overlay.setUnemploymentRate(null);
     }
 }

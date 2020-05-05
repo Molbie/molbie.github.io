@@ -826,30 +826,37 @@ class GeoData {
     }
 }
 class MapData {
+    geography;
     id;
     dataUrl;
     data;
 
-    constructor(geoId, dataUrl) {
+    constructor(geography, geoId, urlPrefix, onLoaded) {
+        this.geography = geography;
         this.id = geoId;
-        this.dataUrl = dataUrl;
+        this.dataUrl = urlPrefix + geography + "/data/";
         this.data = {};
-        this.load();
+        this.load(function(geography) { onLoaded(geography); });
     }
 
     fetch(url, onSuccess) {
-        $.ajax({ 'async': false,
+        $.ajax({ 'async': true,
                  'global': false,
                  'url': url,
                  'dataType': "json",
-                 'success': function (data) {
-                     onSuccess(data)
+                 'success': function(data) {
+                     onSuccess(data);
+                 },
+                 'error': function() {
+                    onSuccess({});
                  }
         });
     }
 
-    load() {
+    load(onLoaded) {
         var self = this;
+        var loadedCount = 0;
+
         for (const year of GeoData.years) {
             this.fetch(this.dataUrl + this.id + "_" + year + ".json", function(rawData) {
                 for (const geoId in rawData) {
@@ -857,6 +864,11 @@ class MapData {
                         self.data[geoId] = new GeoData(geoId);
                     }
                     self.data[geoId].add(new GeoTimePeriod(geoId, year, rawData[geoId]));
+                }
+
+                loadedCount++;
+                if (loadedCount == GeoData.years.length) {
+                    onLoaded(self.geography);
                 }
             });
         }
@@ -880,6 +892,38 @@ class MapData {
     getWaterArea(geoId) {
         var geoData = this.getGeoData(geoId);
         return geoData.getWaterArea(null);
+    }
+
+    getAllPopulation(year) {
+        var result = 0;
+
+        for (const geoId in this.data) {
+            var geoData = this.data[geoId];
+            var value = geoData.getPopulationTotal(year);
+
+            if (value != null) {
+                result += value;
+            }
+        }
+
+        console.log("all population: " + result);
+        return result;
+    }
+
+    getAllLandArea(year) {
+        var result = 0;
+
+        for (const geoId in this.data) {
+            var geoData = this.data[geoId];
+            var value = geoData.getLandArea(year);
+
+            if (value != null) {
+                result += value;
+            }
+        }
+
+        console.log("all landArea: " + result);
+        return result;
     }
 
     getPopulationTotal(geoId) {
