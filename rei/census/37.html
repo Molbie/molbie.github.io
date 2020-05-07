@@ -77,45 +77,292 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid collectionView">
-            <div class="item">
-                <div class="content">
-                    <section>
-                        <div id="map" style="height: 990px;"></div>
-                        <div id="geocoder" class="geocoder"></div>
-                        <div class="map-overlay">
-                            <div id="mapOverlayContent">
-                                <p><strong id="geoName">NAME</strong><br /><span>ID: </span><span id="geoId">-</span><br /><span>Land Sq Miles: </span><span id="landArea">-</span><br /><span>Water Sq Miles: </span><span id="waterArea">-</span></p>
-                                <p><strong>POPULATION</strong><br /><span>Total: </span><span id="population">-</span></p>
-                                <p><strong>HOUSEHOLDS</strong><br /><span>Total: </span><span id="households">-</span></p>
-                                <p><strong>INCOME</strong><br /><span>Family: </span><span id="familyIncome">-</span><br /><span>Household: </span><span id="householdIncome">-</span><br /><span>Per Capita: </span><span id="perCapitaIncome">-</span></p>
-                                <p><strong>HOUSE VALUE</strong><br /><span>Median: </span><span id="houseValue">-</span><br /><span>Upper Quartile: </span><span id="upperHouseValue">-</span><br /><span>Lower Quartile: </span><span id="lowerHouseValue">-</span></p>
-                                <p><strong>HOUSING UNITS</strong><br /><span>Total: </span><span id="housingUnits">-</span></p>
-                                <p><strong>VACANCY</strong><br /><span>Rate: </span><span id="vacancyRate">-</span></p>
-                                <p><strong>POVERTY</strong><br /><span>Rate: </span><span id="povertyRate">-</span></p>
-                                <p><strong>UNEMPLOYMENT</strong><br /><span>Rate: </span><span id="unemploymentRate">-</span></p>
-                                <p><strong>AGE</strong><br /><span>Median: </span><span id="medianAge">-</span></p>
-                            </div>
-                            <div id="reportCard">
-                                <p><strong>REPORT CARD</strong></p>
-                                <p id="populationGradeContainer"><span>Population Growth</span><br /><span>Change: </span><span id="populationGradeRate">-</span><br /><span>Grade: </span><span><strong id="populationGradeLetter">-</strong></span></p>
-                                <p id="householdIncomeGradeContainer"><span>Household Income Growth</span><br /><span>Change: </span><span id="householdIncomeGradeRate">-</span><br /><span>Grade: </span><span><strong id="householdIncomeGradeLetter">-</strong></span></p>
-                                <p id="houseValueGradeContainer"><span>House Value Growth</span><br /><span>Change: </span><span id="houseValueGradeRate">-</span><br /><span>Grade: </span><span><strong id="houseValueGradeLetter">-</strong></span></p>
-                            </div>
+        <div class="container-fluid">
+            <div class="column-full segmented-control geography">
+                <input type="radio" name="geography-selection" value="nation" id="geography-nation" />
+                <label for="geography-nation">Nation</label>
+              
+                <input type="radio" name="geography-selection" value="region" id="geography-region" />
+                <label for="geography-region">Region</label>
+              
+                <input type="radio" name="geography-selection" value="division" id="geography-division" />
+                <label for="geography-division">Division</label>
+                
+                <input type="radio" name="geography-selection" value="state" id="geography-state" />
+                <label for="geography-state">State</label>
+              
+                <input type="radio" name="geography-selection" value="statisticalArea" id="geography-statisticalArea" />
+                <label for="geography-statisticalArea">Statistical Area</label>
+                
+                <input type="radio" name="geography-selection" value="county" id="geography-county" checked />
+                <label for="geography-county">County</label>
+                
+                <input type="radio" name="geography-selection" value="place" id="geography-place" />
+                <label for="geography-place">City</label>
+                
+                <input type="radio" name="geography-selection" value="tract" id="geography-tract" />
+                <label for="geography-tract">Tract</label>
+            </div>
+
+            <div class="column-full segmented-control overlay">
+                <input type="radio" name="overlay-selection" value="standard" id="overlay-standard" />
+                <label for="overlay-standard">Standard</label>
+
+                <input type="radio" name="overlay-selection" value="populationDensity" id="overlay-populationDensity" checked />
+                <label for="overlay-populationDensity">Population Density</label>
+            </div>
+
+            <div id="geocoder" class="column-full geocoder"></div>
+
+            <div id="map" class="column-full"></div>
+
+            <header class="column-full first">
+                <h1 class="title" id="geoName">NAME</h1>
+            </header>
+
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Report Card</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <div id="populationGradeContainer" style="text-align: center;">
+                            <span style="text-align: center;">Population Growth</span>
+                            <span class="primary-stat">
+                                <span class="value" id="populationGradeLetter" style="text-align: center;">-</span>
+                                <span class="name" id="populationGradeRate" style="text-align: center;">-</span>
+                            </span>
                         </div>
-                    </section>
-                </div>
-                <div class="content">
-                    <canvas id="populationChart"></canvas>
-                    <canvas id="householdsChart"></canvas>
-                    <canvas id="incomeChart"></canvas>
-                    <canvas id="houseValueChart"></canvas>
-                    <canvas id="housingUnitsChart"></canvas>
-                    <canvas id="vacancyChart"></canvas>
-                    <canvas id="povertyChart"></canvas>
-                    <canvas id="unemploymentChart"></canvas>
-                    <canvas id="medianAgeChart"></canvas>
-                </div>
+                    </div>
+                    <div class="column-thirds">
+                        <div id="householdIncomeGradeContainer" style="text-align: center;">
+                            <span style="text-align: center;">Household Income Growth</span>
+                            <span class="primary-stat">
+                                <span class="value" id="householdIncomeGradeLetter" style="text-align: center;">-</span>
+                                <span class="name" id="householdIncomeGradeRate" style="text-align: center;">-</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="column-thirds">
+                        <div id="houseValueGradeContainer" style="text-align: center;">
+                            <span style="text-align: center;">House Value Growth</span>
+                            <span class="primary-stat">
+                                <span class="value" id="houseValueGradeLetter" style="text-align: center;">-</span>
+                                <span class="name" id="houseValueGradeRate" style="text-align: center;">-</span>
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">People</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="population">-</span>
+                            <span class="name">Population</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="households">-</span>
+                            <span class="name">Households</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="geoId" style="display: none;">&nbsp;</span>
+                            <span class="name">&nbsp;</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+
+
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Area</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="waterArea">-</span>
+                            <span class="name">Square Miles Of Water</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="landArea">-</span>
+                            <span class="name">Square Miles Of Land</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="populationDensity">-</span>
+                            <span class="name">People Per Square Mile Of Land</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Income</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="householdIncome">-</span>
+                            <span class="name">Median Household</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="familyIncome">-</span>
+                            <span class="name">Median Family</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="perCapitaIncome">-</span>
+                            <span class="name">Per Capita</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">House Value</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="houseValue">-</span>
+                            <span class="name">Median</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="upperHouseValue">-</span>
+                            <span class="name">Upper Quartile</span>
+                        </span>
+                    </div>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="lowerHouseValue">-</span>
+                            <span class="name">Lower Quartile</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Housing</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="housingUnits">-</span>
+                            <span class="name">Units</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Vacancy</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="vacancyRate">-</span>
+                            <span class="name">Rate</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Age</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="medianAge">-</span>
+                            <span class="name">Median</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Poverty</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="povertyRate">-</span>
+                            <span class="name">Rate</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="column-full">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Unemployment</h2>
+                    </header>
+                    <div class="column-thirds">
+                        <span class="primary-stat">
+                            <span class="value" id="unemploymentRate">-</span>
+                            <span class="name">Rate</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+
+            <div class="column-full" style="padding-bottom: 50px;">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">Trends - <span id="chartName">click on a geographic area to load the data</span></h2>
+                    </header>
+                </article>
+            </div>
+            <div class="column-full">
+                <canvas id="populationChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="householdsChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="incomeChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="houseValueChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="housingUnitsChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="vacancyChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="medianAgeChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="povertyChart"></canvas>
+            </div>
+            <div class="column-full">
+                <canvas id="unemploymentChart"></canvas>
             </div>
         </div>
         <footer class="footer">

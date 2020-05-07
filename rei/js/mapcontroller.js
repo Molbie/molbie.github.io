@@ -12,11 +12,11 @@ class Map {
         this.geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, zoom: 14, marker: {color: '#37C0F0'}, mapboxgl: mapboxgl});
         this.map = new mapboxgl.Map({container: 'map', style: 'mapbox://styles/mapbox/light-v10', center: centerPoint, zoom: 6});
         
-        this.map.addControl(this.navigationControl);
-        document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
-
         var self = this;
         this.map.on('load', function() { 
+            self.map.addControl(self.navigationControl);
+            document.getElementById('geocoder').appendChild(self.geocoder.onAdd(self.map));
+
             self.map.resize();
             self.map.scrollZoom.disable();
         });
@@ -26,14 +26,12 @@ class Map {
         this.map.addSource(sourceId, {'type': 'geojson', 'data': url});
     }
     
-    addDensityLayer(id, sourceId, numerator, denominator, minValue, maxValue, startColor, endColor, minZoom, maxZoom) {
+    addDensityLayer(id, sourceId, numerator, denominator, minValue, maxValue, startColor, endColor, isVisible) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
-            'minzoom': minZoom,
-            'maxzoom': maxZoom,
-            'layout': {},
+            'layout': {'visibility': (isVisible ? 'visible' : 'none')},
             'paint': {
                 'fill-color': [
                     'let',
@@ -54,14 +52,25 @@ class Map {
         });
     }
 
-    addHoverLayer(id, sourceId, color, minZoom, maxZoom) {
+    addFillLayer(id, sourceId, color, isVisible) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
-            'minzoom': minZoom,
-            'maxzoom': maxZoom,
-            'layout': {},
+            'layout': {'visibility': (isVisible ? 'visible' : 'none')},
+            'paint': {
+                'fill-color': color,
+                'fill-opacity': 0.2
+                }
+        });
+    }
+
+    addHoverLayer(id, sourceId, color, isVisible) {
+        this.map.addLayer({
+            'id': id,
+            'type': 'fill',
+            'source': sourceId,
+            'layout': {'visibility': (isVisible ? 'visible' : 'none')},
             'paint': {
                 'fill-color': color,
                 'fill-opacity': ['case',
@@ -73,14 +82,12 @@ class Map {
         });
     }
 
-    addSelectedLayer(id, sourceId, color, minZoom, maxZoom) {
+    addSelectedLayer(id, sourceId, color, isVisible) {
         this.map.addLayer({
             'id': id,
             'type': 'fill',
             'source': sourceId,
-            'minzoom': minZoom,
-            'maxzoom': maxZoom,
-            'layout': {},
+            'layout': {'visibility': (isVisible ? 'visible' : 'none')},
             'paint': {
                 'fill-color': color,
                 'fill-opacity': ['case',
@@ -92,14 +99,12 @@ class Map {
         });
     }
 
-    addBorderLayer(id, sourceId, color, minZoom, maxZoom) {
+    addBorderLayer(id, sourceId, color, isVisible) {
         this.map.addLayer({
             'id': id,
             'type': 'line',
             'source': sourceId,
-            'minzoom': minZoom,
-            'maxzoom': maxZoom,
-            'layout': {},
+            'layout': {'visibility': (isVisible ? 'visible' : 'none')},
             'paint': {
                 'line-color': color,
                 'line-opacity': 0.2,
@@ -145,6 +150,7 @@ class MapOverlay {
     geoName;
     landArea;
     waterArea;
+    populationDensity;
     population;
     households;
     medianAge;
@@ -164,6 +170,7 @@ class MapOverlay {
         this.geoName = document.getElementById('geoName');
         this.landArea = document.getElementById('landArea');
         this.waterArea = document.getElementById('waterArea');
+        this.populationDensity = document.getElementById('populationDensity');
         this.population = document.getElementById('population');
         this.households = document.getElementById('households');
         this.medianAge = document.getElementById('medianAge');
@@ -184,7 +191,7 @@ class MapOverlay {
     }
 
     setGeoName(value) {
-        this.geoName.innerHTML = value == null ? "NAME" : value.toUpperCase();
+        this.geoName.innerHTML = value == null ? "&nbsp;" : value;
     }
 
     setLandArea(value) {
@@ -193,6 +200,10 @@ class MapOverlay {
 
     setWaterArea(value) {
         this.waterArea.innerHTML = value == null ? "-" : value.toFixed(2);
+    }
+
+    setPopulationDensity(value) {
+        this.populationDensity.innerHTML = value == null ? "-" : value.toFixed(2);
     }
 
     setPopulation(value) {
@@ -272,18 +283,30 @@ class MapController {
         this.ruleEngine.addPopulationGrowthRules();
         this.ruleEngine.addHouseholdMedianIncomeGrowthRules();
         this.ruleEngine.addHouseValueGrowthRules();
+        
+        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedOverlay = $('input[type=radio][name=overlay-selection]:checked').val();
         this.mapData = {};
-        this.mapData[CensusGeography.nation] = new MapData(CensusGeography.nation, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
-        this.mapData[CensusGeography.region] = new MapData(CensusGeography.region, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
-        this.mapData[CensusGeography.division] = new MapData(CensusGeography.division, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
-        this.mapData[CensusGeography.state] = new MapData(CensusGeography.state, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
-        this.mapData[CensusGeography.statisticalArea] = new MapData(CensusGeography.statisticalArea, "all", urlPrefix, function(geography) { self.loadMap(geography, "all"); });
-        this.mapData[CensusGeography.place] = new MapData(CensusGeography.place, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
-        this.mapData[CensusGeography.county] = new MapData(CensusGeography.county, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
-        this.mapData[CensusGeography.tract] = new MapData(CensusGeography.tract, geoId, urlPrefix, function(geography) { self.loadMap(geography, geoId); });
+        this.mapData[CensusGeography.nation] = new MapData(CensusGeography.nation, "all", urlPrefix, function() { self.loadMap(CensusGeography.nation, "all", CensusGeography.nation == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.region] = new MapData(CensusGeography.region, "all", urlPrefix, function() { self.loadMap(CensusGeography.region, "all", CensusGeography.region == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.division] = new MapData(CensusGeography.division, "all", urlPrefix, function() { self.loadMap(CensusGeography.division, "all", CensusGeography.division == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.state] = new MapData(CensusGeography.state, "all", urlPrefix, function() { self.loadMap(CensusGeography.state, "all", CensusGeography.state == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.statisticalArea] = new MapData(CensusGeography.statisticalArea, "all", urlPrefix, function() { self.loadMap(CensusGeography.statisticalArea, "all", CensusGeography.statisticalArea == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.place] = new MapData(CensusGeography.place, geoId, urlPrefix, function() { self.loadMap(CensusGeography.place, geoId, CensusGeography.place == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.county] = new MapData(CensusGeography.county, geoId, urlPrefix, function() { self.loadMap(CensusGeography.county, geoId, CensusGeography.county == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.tract] = new MapData(CensusGeography.tract, geoId, urlPrefix, function() { self.loadMap(CensusGeography.tract, geoId, CensusGeography.tract == selectedGeography, selectedOverlay); });
+
+        $('input[type=radio][name=geography-selection]').change(function() {
+            var selectedOverlay = $('input[type=radio][name=overlay-selection]:checked').val();
+            self.setVisibleGeography(this.value, selectedOverlay);
+        });
+        $('input[type=radio][name=overlay-selection]').change(function() {
+            var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
+            self.setVisibleGeography(selectedGeography, this.value);
+        });
     }
 
-    loadMap(geography, geoId) {
+    loadMap(geography, geoId, isVisible, overlayType) {
         var self = this;
 
         var polygonUrl = self.urlPrefix + geography + "/polygons/" + geoId + ".json";
@@ -296,12 +319,12 @@ class MapController {
                     var totalLandArea = self.mapData[geography].getAllLandArea();
 
                     data.features = data.features.map(function(d) {
-                        var geoId = d.properties.GEOID;
-                        if (geoId == "US") {
-                            geoId = "";
+                        var propertyId = d.properties.GEOID;
+                        if (propertyId == "US") {
+                            propertyId = "";
                         }
-                        var population = self.mapData[geography].getPopulationTotal(geoId);
-                        var landArea = self.mapData[geography].getLandArea(geoId);
+                        var population = self.mapData[geography].getPopulationTotal(propertyId);
+                        var landArea = self.mapData[geography].getLandArea(propertyId);
                         if (geography == CensusGeography.nation) {
                             if (totalLandArea == 0) {
                                 totalLandArea = 1;
@@ -317,14 +340,12 @@ class MapController {
                     });
 
                     self.map.addPolygons(geography + '-polygons', data);
-                    
-                    var minZoom = self.minMapZoomLevel(geography);
-                    var maxZoom = self.maxMapZoomLevel(geography);
 
-                    self.map.addDensityLayer(geography + 'population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C", minZoom, maxZoom);
-                    self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888', minZoom, maxZoom);
-                    self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888', minZoom, maxZoom);
-                    self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000', minZoom, maxZoom);
+                    self.map.addFillLayer(geography + '-fill-layer', geography + '-polygons', "#006D2C", isVisible && overlayType == 'standard');
+                    self.map.addDensityLayer(geography + '-population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C", isVisible && overlayType == 'populationDensity');
+                    self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888', isVisible);
+                    self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888', isVisible);
+                    self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000', isVisible);
 
                     self.map.addMouseMoveHandler(geography + '-hover-layer', function(e) { self.onMouseMove(e, geography); });
                     self.map.addMouseEnterHandler(geography + '-hover-layer', function(e) { self.onMouseEnter(e, geography); });
@@ -334,46 +355,18 @@ class MapController {
         });
     }
 
-    minMapZoomLevel(geography) {
-        switch (geography) {
-            case CensusGeography.nation:
-                return 0;
-            case CensusGeography.region:
-                return 2;
-            case CensusGeography.division:
-                return 3;
-            case CensusGeography.state:
-                return 4;
-            case CensusGeography.statisticalArea:
-                return 5;
-            case CensusGeography.county:
-                return 6;
-            case CensusGeography.place:
-                return 8;
-            case CensusGeography.tract:
-                return 10;
-        }
-    }
+    setVisibleGeography(geography, selectedOverlay) {
+        var self = this;
 
-    maxMapZoomLevel(geography) {
-        switch (geography) {
-            case CensusGeography.nation:
-                return 2;
-            case CensusGeography.region:
-                return 3;
-            case CensusGeography.division:
-                return 4;
-            case CensusGeography.state:
-                return 5;
-            case CensusGeography.statisticalArea:
-                return 6;
-            case CensusGeography.county:
-                return 8;
-            case CensusGeography.place:
-                return 10;
-            case CensusGeography.tract:
-                return 14;
-        }
+        CensusGeography.all().forEach(function(value, index) {
+            var isVisible = value == geography;
+
+            self.map.setLayerVisibility(value + '-fill-layer', isVisible && selectedOverlay == 'standard');
+            self.map.setLayerVisibility(value + '-population-density-layer', isVisible && selectedOverlay == 'populationDensity');
+            self.map.setLayerVisibility(value + '-hover-layer', isVisible);
+            self.map.setLayerVisibility(value + '-selected-layer', isVisible);
+            self.map.setLayerVisibility(value + '-border-layer', isVisible);
+        });
     }
 
     onMouseMove(e, geography) {
@@ -454,11 +447,19 @@ class MapController {
     }
 
     updateOverlay(geoId, geography) {
+        var landArea = this.mapData[geography].getLandArea(geoId);
+        var population = this.mapData[geography].getPopulationTotal(geoId);
+        var populationDensity = null;
+        if (landArea != null && population != null) {
+            populationDensity = population / landArea;
+        }
+
         this.overlay.setGeoId(geoId);
         this.overlay.setGeoName(this.mapData[geography].getName(geoId));
-        this.overlay.setLandArea(this.mapData[geography].getLandArea(geoId));
+        this.overlay.setLandArea(landArea);
         this.overlay.setWaterArea(this.mapData[geography].getWaterArea(geoId));
-        this.overlay.setPopulation(this.mapData[geography].getPopulationTotal(geoId));
+        this.overlay.setPopulationDensity(populationDensity);
+        this.overlay.setPopulation(population);
         this.overlay.setHouseholds(this.mapData[geography].getHouseholdTotal(geoId));
         this.overlay.setMedianAge(this.mapData[geography].getMedianAge(geoId));
         this.overlay.setFamilyIncome(this.mapData[geography].getFamilyIncome(geoId));
@@ -482,6 +483,7 @@ class MapController {
         this.overlay.setGeoName(null);
         this.overlay.setLandArea(null);
         this.overlay.setWaterArea(null);
+        this.overlay.setPopulationDensity(null);
         this.overlay.setPopulation(null);
         this.overlay.setHouseholds(null);
         this.overlay.setMedianAge(null);

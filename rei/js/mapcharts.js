@@ -4,8 +4,8 @@ class MapLineChart {
     constructor(domId, title, datasets, labels) {
         var configuation = MapLineChart.makeConfiguration(title, datasets, labels);
         var context = document.getElementById(domId).getContext('2d');
-        context.canvas.width = 800;
-        context.canvas.height = 200;
+        context.canvas.width = 738;
+        context.canvas.height = 300;
         
         this.chart = new Chart(context, configuation);
     }
@@ -70,9 +70,12 @@ class MapCharts {
     poverty;
     unemployment;
     medianAge;
+    chartName;
 
     constructor() {
-        Chart.defaults.global.animation.duration = 1000;
+        Chart.defaults.global.maintainAspectRatio = false;
+        Chart.defaults.global.animation.duration = 0;
+        Chart.defaults.global.responsiveAnimationDuration = 0;
         Chart.defaults.global.responsive = true;
         Chart.defaults.global.elements.line.tension = 0;
         Chart.defaults.global.elements.line.fill = false;
@@ -81,12 +84,14 @@ class MapCharts {
         Chart.defaults.global.elements.point.hoverRadius = 15;
         Chart.defaults.global.title.display = true;
         Chart.defaults.global.title.fontSize = 16;
+        Chart.defaults.global.title.position = 'left';
         Chart.defaults.global.tooltips.mode = 'index';
         Chart.defaults.global.tooltips.intersect = true;
         Chart.defaults.global.tooltips.titleAlign = 'center';
         Chart.defaults.global.hover.mode = 'nearest';
         Chart.defaults.global.hover.intersect = true;
         Chart.defaults.line.spanGaps = true;
+        Chart.defaults.global.legend.position = 'bottom';
 
         this.showValues = true;
         this.population = new MapLineChart('populationChart', 'Population', [{title: 'Total', color: '#37C0F0', data: MapCharts.emptyDataset()}], MapCharts.years());
@@ -98,6 +103,7 @@ class MapCharts {
         this.poverty = new MapLineChart('povertyChart', 'Poverty', [{title: 'Rate', color: '#3CDC4E', data: MapCharts.emptyDataset()}], MapCharts.years());
         this.unemployment = new MapLineChart('unemploymentChart', 'Unemployment', [{title: 'Rate', color: '#37C0F0', data: MapCharts.emptyDataset()}], MapCharts.years());
         this.medianAge = new MapLineChart('medianAgeChart', 'Age', [{title: 'Median', color: '#305EAB', data: MapCharts.emptyDataset()}], MapCharts.years());
+        this.chartName = document.getElementById('chartName');
     }
 
     update(geoData) {
@@ -110,6 +116,9 @@ class MapCharts {
         this.poverty.update([this.povertyData(geoData)]);
         this.unemployment.update([this.unemploymentData(geoData)]);
         this.medianAge.update([this.medianAgeData(geoData)]);
+
+        var name = geoData.getName();
+        this.chartName.innerHTML = name == null ? "click on a geographic area to load the data" : name;
     }
 
     populationData(geoData) {

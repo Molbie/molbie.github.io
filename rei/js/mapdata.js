@@ -836,7 +836,7 @@ class MapData {
         this.id = geoId;
         this.dataUrl = urlPrefix + geography + "/data/";
         this.data = {};
-        this.load(function(geography) { onLoaded(geography); });
+        this.load(function() { onLoaded(); });
     }
 
     fetch(url, onSuccess) {
@@ -868,7 +868,7 @@ class MapData {
 
                 loadedCount++;
                 if (loadedCount == GeoData.years.length) {
-                    onLoaded(self.geography);
+                    onLoaded();
                 }
             });
         }
