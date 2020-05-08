@@ -317,14 +317,63 @@ class MapController {
                  'success': function (data) {
                     var totalPopulation = self.mapData[geography].getAllPopulation();
                     var totalLandArea = self.mapData[geography].getAllLandArea();
+                    var minHouseholdIncome = self.mapData[geography].getMinHouseholdIncome();
+                    var maxHouseholdIncome = self.mapData[geography].getMaxHouseholdIncome();
+                    var minFamilyIncome = self.mapData[geography].getMinFamilyIncome();
+                    var maxFamilyIncome = self.mapData[geography].getMaxFamilyIncome();
+                    var minHouseValue = self.mapData[geography].getMinHouseValue();
+                    var maxHouseValue = self.mapData[geography].getMaxHouseValue();
+                    var minHousingUnits = self.mapData[geography].getMinHousingUnits();
+                    var maxHousingUnits = self.mapData[geography].getMaxHousingUnits();
+                    var minVacancyRate = self.mapData[geography].getMinVacancyRate();
+                    var maxVacancyRate = self.mapData[geography].getMaxVacancyRate();
+                    var minAge = self.mapData[geography].getMinAge();
+                    var maxAge = self.mapData[geography].getMaxAge();
+                    var minPoverty = self.mapData[geography].getMinPoverty();
+                    var maxPoverty = self.mapData[geography].getMaxPoverty();
+                    var minUnemployment = self.mapData[geography].getMinUnemployment();
+                    var maxUnemployment = self.mapData[geography].getMaxUnemployment();
 
                     data.features = data.features.map(function(d) {
-                        var propertyId = d.properties.GEOID;
-                        if (propertyId == "US") {
-                            propertyId = "";
+                        var geoId = d.properties.GEOID;
+                        if (geoId == "US") {
+                            geoId = "";
                         }
-                        var population = self.mapData[geography].getPopulationTotal(propertyId);
-                        var landArea = self.mapData[geography].getLandArea(propertyId);
+                        var landArea = self.mapData[geography].getLandArea(geoId);
+                        var population = self.mapData[geography].getPopulationTotal(geoId);
+                        var householdIncome = self.mapData[geography].getHouseholdIncome(geoId);
+                        if (householdIncome == null) {
+                            householdIncome = 0;
+                        }
+                        var familyIncome = self.mapData[geography].getFamilyIncome(geoId);
+                        if (familyIncome == null) {
+                            familyIncome = 0;
+                        }
+                        var houseValue = self.mapData[geography].getMedianHouseValue(geoId);
+                        if (houseValue == null) {
+                            houseValue = 0;
+                        }
+                        var housingUnits = self.mapData[geography].getHousingUnitsTotal(geoId);
+                        if (housingUnits == null) {
+                            housingUnits = 0;
+                        }
+                        var vacancyRate = self.mapData[geography].getVacancyRate(geoId);
+                        if (vacancyRate == null) {
+                            vacancyRate = 0;
+                        }
+                        var age = self.mapData[geography].getMedianAge(geoId);
+                        if (age == null) {
+                            age = 0;
+                        }
+                        var poverty = self.mapData[geography].getPovertyRate(geoId);
+                        if (poverty == null) {
+                            poverty = 0;
+                        }
+                        var unemployment = self.mapData[geography].getUnemploymentRate(geoId);
+                        if (unemployment == null) {
+                            unemployment = 0;
+                        }
+                        
                         if (geography == CensusGeography.nation) {
                             if (totalLandArea == 0) {
                                 totalLandArea = 1;
@@ -334,8 +383,26 @@ class MapController {
                             }
                         }
                         
-                        d.properties.population = population / totalPopulation;
-                        d.properties.landArea = landArea / totalLandArea;
+                        var minValue = 0.0000001
+                        d.properties.landArea = Math.max(minValue, landArea / totalLandArea);
+                        d.properties.population = Math.max(minValue, population / totalPopulation);
+                        d.properties.householdIncome = Math.max(minValue, householdIncome - minHouseholdIncome);
+                        d.properties.maxHouseholdIncome = Math.max(minValue, maxHouseholdIncome - minHouseholdIncome);
+                        d.properties.familyIncome = Math.max(minValue, familyIncome - minFamilyIncome);
+                        d.properties.maxFamilyIncome = Math.max(minValue, maxFamilyIncome - minFamilyIncome);
+                        d.properties.houseValue = Math.max(minValue, houseValue - minHouseValue);
+                        d.properties.maxHouseValue = Math.max(minValue, maxHouseValue - minHouseValue);
+                        d.properties.housingUnits = Math.max(minValue, housingUnits - minHousingUnits);
+                        d.properties.maxHousingUnits = Math.max(minValue, maxHousingUnits - minHousingUnits);
+                        d.properties.vacancyRate = Math.max(minValue, vacancyRate - minVacancyRate);
+                        d.properties.maxVacancyRate = Math.max(minValue, maxVacancyRate - minVacancyRate);
+                        d.properties.age = Math.max(minValue, age - minAge);
+                        d.properties.maxAge = Math.max(minValue, maxAge - minAge);
+                        d.properties.poverty = Math.max(minValue, poverty - minPoverty);
+                        d.properties.maxPoverty = Math.max(minValue, maxPoverty - minPoverty);
+                        d.properties.unemployment = Math.max(minValue, unemployment - minUnemployment);
+                        d.properties.maxUnemployment = Math.max(minValue, maxUnemployment - minUnemployment);
+
                         return d;
                     });
 
@@ -343,6 +410,14 @@ class MapController {
 
                     self.map.addFillLayer(geography + '-fill-layer', geography + '-polygons', "#006D2C", isVisible && overlayType == 'standard');
                     self.map.addDensityLayer(geography + '-population-density-layer', geography + '-polygons', 'population', 'landArea', 0, 1, "#EDF8FB", "#006D2C", isVisible && overlayType == 'populationDensity');
+                    self.map.addDensityLayer(geography + '-household-income-layer', geography + '-polygons', 'householdIncome', 'maxHouseholdIncome', 0, 1, "#EDF8FB", "#810F7C", isVisible && overlayType == 'householdIncome');
+                    self.map.addDensityLayer(geography + '-family-income-layer', geography + '-polygons', 'familyIncome', 'maxFamilyIncome', 0, 1, "#EDF8FB", "#810F7C", isVisible && overlayType == 'familyIncome');
+                    self.map.addDensityLayer(geography + '-house-value-layer', geography + '-polygons', 'houseValue', 'maxHouseValue', 0, 1, "#F0F9E8", "#0868AC", isVisible && overlayType == 'houseValue');
+                    self.map.addDensityLayer(geography + '-housing-units-layer', geography + '-polygons', 'housingUnits', 'maxHousingUnits', 0, 1, "#FEF0D9", "#B30000", isVisible && overlayType == 'housingUnits');
+                    self.map.addDensityLayer(geography + '-vacancy-rate-layer', geography + '-polygons', 'vacancyRate', 'maxVacancyRate', 0, 1, "#F1EEF6", "#045A8D", isVisible && overlayType == 'vacancyRate');
+                    self.map.addDensityLayer(geography + '-age-layer', geography + '-polygons', 'age', 'maxAge', 0, 1, "#F6EFF7", "#016C59", isVisible && overlayType == 'age');
+                    self.map.addDensityLayer(geography + '-poverty-layer', geography + '-polygons', 'poverty', 'maxPoverty', 0, 1, "#f1eef6", "#980043", isVisible && overlayType == 'poverty');
+                    self.map.addDensityLayer(geography + '-unemployment-layer', geography + '-polygons', 'unemployment', 'maxUnemployment', 0, 1, "#FEEBE2", "#7A0177", isVisible && overlayType == 'unemployment');
                     self.map.addHoverLayer(geography + '-hover-layer', geography + '-polygons', '#888888', isVisible);
                     self.map.addSelectedLayer(geography + '-selected-layer', geography + '-polygons', '#888888', isVisible);
                     self.map.addBorderLayer(geography + '-border-layer', geography + '-polygons', '#000000', isVisible);
@@ -363,6 +438,14 @@ class MapController {
 
             self.map.setLayerVisibility(value + '-fill-layer', isVisible && selectedOverlay == 'standard');
             self.map.setLayerVisibility(value + '-population-density-layer', isVisible && selectedOverlay == 'populationDensity');
+            self.map.setLayerVisibility(value + '-household-income-layer', isVisible && selectedOverlay == 'householdIncome');
+            self.map.setLayerVisibility(value + '-family-income-layer', isVisible && selectedOverlay == 'familyIncome');
+            self.map.setLayerVisibility(value + '-house-value-layer', isVisible && selectedOverlay == 'houseValue');
+            self.map.setLayerVisibility(value + '-housing-units-layer', isVisible && selectedOverlay == 'housingUnits');
+            self.map.setLayerVisibility(value + '-vacancy-rate-layer', isVisible && selectedOverlay == 'vacancyRate');
+            self.map.setLayerVisibility(value + '-age-layer', isVisible && selectedOverlay == 'age');
+            self.map.setLayerVisibility(value + '-poverty-layer', isVisible && selectedOverlay == 'poverty');
+            self.map.setLayerVisibility(value + '-unemployment-layer', isVisible && selectedOverlay == 'unemployment');
             self.map.setLayerVisibility(value + '-hover-layer', isVisible);
             self.map.setLayerVisibility(value + '-selected-layer', isVisible);
             self.map.setLayerVisibility(value + '-border-layer', isVisible);

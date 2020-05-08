@@ -36,7 +36,6 @@
 
 .segmented-control {
   display: flex;
-  max-width: 738px;
   width: 100%;
   position: relative;
   user-select: none;
@@ -80,6 +79,12 @@
 .segmented-control > input:nth-of-type(8):checked ~ label:last-of-type:before {
   transform: translateX(calc(700% + 0px));
 }
+.segmented-control > input:nth-of-type(9):checked ~ label:last-of-type:before {
+  transform: translateX(calc(800% + 0px));
+}
+.segmented-control > input:nth-of-type(10):checked ~ label:last-of-type:before {
+  transform: translateX(calc(900% + 0px));
+}
 .segmented-control label {
   flex: 1;
   text-align: center;
@@ -116,7 +121,7 @@
   max-width: calc(12.5% - 0px);
 }
 .segmented-control.overlay label:last-of-type:before {
-  max-width: calc(50% - 0px);
+  max-width: calc(10% - 0px);
 }
 
 article {
