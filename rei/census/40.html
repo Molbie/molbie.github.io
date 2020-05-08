@@ -123,7 +123,7 @@
             <div class="column-full">
                 <article>
                     <header class="column-full">
-                        <h2 class="title">Report Card</h2>
+                        <h2 class="title">Report Card (2000-2019)</h2>
                     </header>
                     <div class="column-thirds">
                         <div id="populationGradeContainer" style="text-align: center;">
@@ -154,6 +154,10 @@
                     </div>
                 </article>
             </div>
+
+            <header class="column-full first">
+                <h1 class="title">Recent Stats</h1>
+            </header>
 
             <div class="column-full">
                 <article>
@@ -330,39 +334,40 @@
                 </article>
             </div>
 
-            <div class="column-full" style="padding-bottom: 50px;">
+            <header class="column-full first">
+                <h1 class="title">Trends - <span id="chartName">click on a geographic area to load the data</span></h1>
+            </header>
+
+            <div class="column-full" id="charts">
                 <article>
-                    <header class="column-full">
-                        <h2 class="title">Trends - <span id="chartName">click on a geographic area to load the data</span></h2>
-                    </header>
+                    <div class="column-full">
+                        <canvas id="populationChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="householdsChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="houseValueChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="housingUnitsChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="vacancyChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="medianAgeChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="povertyChart"></canvas>
+                    </div>
+                    <div class="column-full">
+                        <canvas id="unemploymentChart"></canvas>
+                    </div>
                 </article>
-            </div>
-            <div class="column-full">
-                <canvas id="populationChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="householdsChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="incomeChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="houseValueChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="housingUnitsChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="vacancyChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="medianAgeChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="povertyChart"></canvas>
-            </div>
-            <div class="column-full">
-                <canvas id="unemploymentChart"></canvas>
             </div>
         </div>
         <footer class="footer">
