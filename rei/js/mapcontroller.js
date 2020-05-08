@@ -31,7 +31,15 @@ class Map {
                 'fill-color': [
                     'let',
                     'density',
-                    ['/', ['get', numerator], ['get', denominator]],
+                    ['case',
+                        ['boolean', ['has', numerator], false],
+                        ['case',
+                            ['boolean', ['has', denominator], false],
+                            ['/', ["number", ['get', numerator], 0], ["number", ['get', denominator], 0.00000000001]],
+                            0
+                        ],
+                        0
+                    ],
                     [
                         'interpolate',
                         ['linear'],
