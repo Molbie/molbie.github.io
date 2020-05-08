@@ -1,6 +1,4 @@
 class MapLineChart {
-    chart;
-
     constructor(domId, title, datasets, labels) {
         var configuation = MapLineChart.makeConfiguration(title, datasets, labels);
         var context = document.getElementById(domId).getContext('2d');
@@ -60,18 +58,6 @@ class MapLineChart {
     }
 }
 class MapCharts {
-    showValues;
-    population;
-    households;
-    income;
-    houseValue;
-    housingUnits;
-    vacancy;
-    poverty;
-    unemployment;
-    medianAge;
-    chartName;
-
     constructor() {
         Chart.defaults.global.maintainAspectRatio = false;
         Chart.defaults.global.animation.duration = 0;
@@ -318,8 +304,8 @@ class MapCharts {
 
     static years() {
         var result = [];
-        var year = Math.min(...GeoData.years);
-        var maxYear = Math.max(...GeoData.years);
+        var year = Math.min(...GeoData.years());
+        var maxYear = Math.max(...GeoData.years());
         
         while (year <= maxYear) {
             result.push(year);

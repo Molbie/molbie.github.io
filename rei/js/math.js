@@ -1,7 +1,4 @@
 class NumberRange {
-    start;
-    end;
-
     constructor(start, end) {
         var startValue = Number(start);
         var endValue = Number(end);

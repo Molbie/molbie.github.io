@@ -1,6 +1,4 @@
 class HousingUnits {
-    total;
-
     constructor(data) {
         this.total = null;
 
@@ -12,14 +10,6 @@ class HousingUnits {
     }
 }
 class Vehicle {
-    none;
-    one;
-    two;
-    three;
-    four;
-    fiveOrMore;
-    total;
-
     constructor(data) {
         this.none = null;
         this.one = null;
@@ -55,14 +45,6 @@ class Vehicle {
     }
 }
 class Employment {
-    total;
-    inLaborForce;
-    notInLaborForce;
-    armedForces;
-    civilians;
-    employed;
-    unemployed;
-
     constructor(data) {
         this.total = null;
         this.inLaborForce = null;
@@ -98,8 +80,6 @@ class Employment {
     }
 }
 class Population {
-    total;
-
     constructor(data) {
         this.total = null;
 
@@ -111,10 +91,6 @@ class Population {
     }
 }
 class Age {
-    median;
-    male;
-    female;
-
     constructor(data) {
         this.median = null;
         this.male = null;
@@ -134,10 +110,6 @@ class Age {
     }
 }
 class Poverty {
-    total;
-    above;
-    below;
-
     constructor(data) {
         this.total = null;
         this.above = null;
@@ -157,8 +129,6 @@ class Poverty {
     }
 }
 class Household {
-    total;
-
     constructor(data) {
         this.total = null;
 
@@ -170,15 +140,6 @@ class Household {
     }
 }
 class Vacancy {
-    total;
-    forSale;
-    soldNotOccupied;
-    forRent;
-    rentedNotOccupied;
-    seasonal;
-    migrantWorkers;
-    other;
-
     constructor(data) {
         this.total = null;
         this.forSale = null;
@@ -218,10 +179,6 @@ class Vacancy {
     }
 }
 class Income {
-    household;
-    family;
-    perCapita;
-
     constructor(data) {
         this.household = null;
         this.family = null;
@@ -241,11 +198,6 @@ class Income {
     }
 }
 class HouseValue {
-    median;
-    average;
-    upperQuartile;
-    lowerQuartile;
-
     constructor(data) {
         this.median = null;
         this.average = null;
@@ -269,10 +221,6 @@ class HouseValue {
     }
 }
 class Occupancy {
-    total;
-    occupied;
-    vacant;
-
     constructor(data) {
         this.total = null;
         this.occupied = null;
@@ -292,21 +240,6 @@ class Occupancy {
     }
 }
 class GeoMeta {
-    geoId;
-    year;
-    geoType;
-    name;
-    nationId;
-    regionId;
-    divisionId;
-    stateId;
-    statisticalAreaId;
-    placeId;
-    countyId;
-    tractId;
-    landArea;
-    waterArea;
-
     constructor(data) {
         this.geoId = null;
         this.year = null;
@@ -371,24 +304,9 @@ class GeoMeta {
 }
 
 class GeoTimePeriod {
-    geoId; // TODO: remove this in favor of the meta object
-    year;  // TODO: remove this in favor of the meta object
-    meta;
-    housingUnits;
-    vehicle;
-    employment;
-    population;
-    age;
-    poverty;
-    household;
-    vacancy;
-    income;
-    houseValue;
-    occupancy;
-
     constructor(geoId, year, data) {
-        this.geoId = geoId + "";
-        this.year = parseInt(year, 10);
+        this.geoId = geoId + "";                    // TODO: remove this in favor of the meta object
+        this.year = parseInt(year, 10);             // TODO: remove this in favor of the meta object
         this.meta = new GeoMeta(data);
         this.housingUnits = new HousingUnits(data);
         this.vehicle = new Vehicle(data);
@@ -404,16 +322,15 @@ class GeoTimePeriod {
     }
 }
 class GeoData {
-    static years = [2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2000];
-
-    geoId;
-    data;
+    static years() { 
+        return [2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2000];
+    }
 
     constructor(geoId) {
         this.geoId = geoId;
         this.data = {};
 
-        for (const year in GeoData.years) {
+        for (const year in GeoData.years()) {
             this.data["Y" + year] = new GeoTimePeriod(geoId, year, {});
         }
     }
@@ -437,7 +354,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.meta.name;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.meta.name != null) {
@@ -460,7 +377,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.meta.landArea;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.meta.landArea != null) {
@@ -483,7 +400,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.meta.waterArea;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.meta.waterArea != null) {
@@ -506,7 +423,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.population.total;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.population.total != null) {
@@ -529,7 +446,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.household.total;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.household.total != null) {
@@ -552,7 +469,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.age.median;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.age.median != null) {
@@ -575,7 +492,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.income.family;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.income.family != null) {
@@ -598,7 +515,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.income.household;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.income.household != null) {
@@ -621,7 +538,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.income.perCapita;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.income.perCapita != null) {
@@ -644,7 +561,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.housingUnits.total;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.housingUnits.total != null) {
@@ -667,7 +584,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.houseValue.median;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.houseValue.median != null) {
@@ -690,7 +607,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.houseValue.upperQuartile;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.houseValue.upperQuartile != null) {
@@ -713,7 +630,7 @@ class GeoData {
             var timePeriod = this.getData(year);
             result = timePeriod.houseValue.lowerQuartile;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
                 if (timePeriod.houseValue.lowerQuartile != null) {
@@ -738,7 +655,7 @@ class GeoData {
             count = timePeriod.occupancy.vacant;
             total = timePeriod.occupancy.total;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
                 if (count == null && timePeriod.occupancy.vacant != null) {
@@ -770,7 +687,7 @@ class GeoData {
             count = timePeriod.poverty.below;
             total = timePeriod.poverty.total;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
                 if (count == null && timePeriod.poverty.below != null) {
@@ -802,7 +719,7 @@ class GeoData {
             count = timePeriod.employment.unemployed;
             total = timePeriod.employment.inLaborForce;
         } else {
-            for (const year of GeoData.years) {
+            for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
                 if (count == null && timePeriod.employment.unemployed != null) {
@@ -826,11 +743,6 @@ class GeoData {
     }
 }
 class MapData {
-    geography;
-    id;
-    dataUrl;
-    data;
-
     constructor(geography, geoId, urlPrefix, onLoaded) {
         this.geography = geography;
         this.id = geoId;
@@ -857,7 +769,7 @@ class MapData {
         var self = this;
         var loadedCount = 0;
 
-        for (const year of GeoData.years) {
+        for (const year of GeoData.years()) {
             this.fetch(this.dataUrl + this.id + "_" + year + ".json", function(rawData) {
                 for (const geoId in rawData) {
                     if (self.data[geoId] == null) {
@@ -867,7 +779,7 @@ class MapData {
                 }
 
                 loadedCount++;
-                if (loadedCount == GeoData.years.length) {
+                if (loadedCount == GeoData.years().length) {
                     onLoaded();
                 }
             });

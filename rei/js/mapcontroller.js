@@ -1,9 +1,4 @@
 class Map {
-    centerPoint;
-    navigationControl;
-    geocoder;
-    map;
-
     constructor(accessToken, centerPoint) {
         mapboxgl.accessToken = accessToken;
 
@@ -146,25 +141,6 @@ class Map {
     }
 }
 class MapOverlay {
-    geoId;
-    geoName;
-    landArea;
-    waterArea;
-    populationDensity;
-    population;
-    households;
-    medianAge;
-    familyIncome;
-    householdIncome;
-    perCapitaIncome;
-    housingUnits;
-    houseValue;
-    upperHouseValue;
-    lowerHouseValue;
-    vacancyRate;
-    povertyRate;
-    unemploymentRate;
-
     constructor() {
         this.geoId = document.getElementById('geoId');
         this.geoName = document.getElementById('geoName');
@@ -259,16 +235,6 @@ class MapOverlay {
     }
 }
 class MapController {
-    urlPrefix;
-    hoverId;
-    selectedId;
-    overlay;
-    map;
-    mapCharts;
-    reportCard;
-    ruleEngine;
-    mapData;
-
     constructor(accessToken, geoId, urlPrefix, centerPoint) {
         var self = this;
         
@@ -278,7 +244,7 @@ class MapController {
         this.overlay = new MapOverlay();
         this.map = new Map(accessToken, centerPoint);
         this.mapCharts = new MapCharts();
-        this.reportCard = new ReportCard(RuleGradingSystem.letters);
+        this.reportCard = new ReportCard(RuleGradingSystem.letters());
         this.ruleEngine = new RuleEngine(); 
         this.ruleEngine.addPopulationGrowthRules();
         this.ruleEngine.addHouseholdMedianIncomeGrowthRules();
@@ -287,14 +253,14 @@ class MapController {
         var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
         var selectedOverlay = $('input[type=radio][name=overlay-selection]:checked').val();
         this.mapData = {};
-        this.mapData[CensusGeography.nation] = new MapData(CensusGeography.nation, "all", urlPrefix, function() { self.loadMap(CensusGeography.nation, "all", CensusGeography.nation == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.region] = new MapData(CensusGeography.region, "all", urlPrefix, function() { self.loadMap(CensusGeography.region, "all", CensusGeography.region == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.division] = new MapData(CensusGeography.division, "all", urlPrefix, function() { self.loadMap(CensusGeography.division, "all", CensusGeography.division == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.state] = new MapData(CensusGeography.state, "all", urlPrefix, function() { self.loadMap(CensusGeography.state, "all", CensusGeography.state == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.statisticalArea] = new MapData(CensusGeography.statisticalArea, "all", urlPrefix, function() { self.loadMap(CensusGeography.statisticalArea, "all", CensusGeography.statisticalArea == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.place] = new MapData(CensusGeography.place, geoId, urlPrefix, function() { self.loadMap(CensusGeography.place, geoId, CensusGeography.place == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.county] = new MapData(CensusGeography.county, geoId, urlPrefix, function() { self.loadMap(CensusGeography.county, geoId, CensusGeography.county == selectedGeography, selectedOverlay); });
-        this.mapData[CensusGeography.tract] = new MapData(CensusGeography.tract, geoId, urlPrefix, function() { self.loadMap(CensusGeography.tract, geoId, CensusGeography.tract == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.nation()] = new MapData(CensusGeography.nation(), "all", urlPrefix, function() { self.loadMap(CensusGeography.nation(), "all", CensusGeography.nation() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.region()] = new MapData(CensusGeography.region(), "all", urlPrefix, function() { self.loadMap(CensusGeography.region(), "all", CensusGeography.region() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.division()] = new MapData(CensusGeography.division(), "all", urlPrefix, function() { self.loadMap(CensusGeography.division(), "all", CensusGeography.division() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.state()] = new MapData(CensusGeography.state(), "all", urlPrefix, function() { self.loadMap(CensusGeography.state(), "all", CensusGeography.state() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.statisticalArea()] = new MapData(CensusGeography.statisticalArea(), "all", urlPrefix, function() { self.loadMap(CensusGeography.statisticalArea(), "all", CensusGeography.statisticalArea() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.place()] = new MapData(CensusGeography.place(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.place(), geoId, CensusGeography.place() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.county()] = new MapData(CensusGeography.county(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.county(), geoId, CensusGeography.county() == selectedGeography, selectedOverlay); });
+        this.mapData[CensusGeography.tract()] = new MapData(CensusGeography.tract(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.tract(), geoId, CensusGeography.tract() == selectedGeography, selectedOverlay); });
 
         $('input[type=radio][name=geography-selection]').change(function() {
             var selectedOverlay = $('input[type=radio][name=overlay-selection]:checked').val();
@@ -374,7 +340,7 @@ class MapController {
                             unemployment = 0;
                         }
                         
-                        if (geography == CensusGeography.nation) {
+                        if (geography == CensusGeography.nation()) {
                             if (totalLandArea == 0) {
                                 totalLandArea = 1;
                             }

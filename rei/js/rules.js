@@ -1,15 +1,20 @@
 class RuleIdentifier {
-    static populationGrowth = "populationGrowth"
-    static householdMedianIncomeGrowth = "householdMedianIncomeGrowth"
-    static houseValueGrowth = "houseValueGrowth"
-
+    static populationGrowth() { 
+        return "populationGrowth"; 
+    }
+    static householdMedianIncomeGrowth() { 
+        return "householdMedianIncomeGrowth"; 
+    }
+    static houseValueGrowth() { 
+        return "houseValueGrowth"; 
+    }
     static isValid(value) {
         var result = false;
 
         switch (value) {
-            case RuleIdentifier.populationGrowth:
-            case RuleIdentifier.householdMedianIncomeGrowth:
-            case RuleIdentifier.houseValueGrowth:
+            case RuleIdentifier.populationGrowth():
+            case RuleIdentifier.householdMedianIncomeGrowth():
+            case RuleIdentifier.houseValueGrowth():
                 result = true;
                 break;
             default:
@@ -20,12 +25,6 @@ class RuleIdentifier {
     }
 }
 class RuleConditionDTO {
-    geography;
-    identifier;
-    valueRange;
-    rate;
-    yearRate;
-
     constructor(geography, identifier, valueStart, valueEnd, rate, yearRate) {
         if (!CensusGeography.isValid(geography)) {
             throw "Invalid geography";
@@ -59,12 +58,6 @@ class RuleConditionDTO {
     }
 }
 class RuleDTO {
-    geography;
-    identifier;
-    targetYears;
-    isActive;
-    conditions;
-
     constructor(geography, identifier, targetYears, isActive, conditions) {
         if (!CensusGeography.isValid(geography)) {
             throw "Invalid geography";
@@ -103,8 +96,6 @@ class RuleDTO {
     }
 }
 class RuleCondition {
-    dto;
-
     get geography() {
         return this.dto.geography;
     }
@@ -152,7 +143,7 @@ class RuleCondition {
 
     static makeDefaultPopulationGrowth(geography) {
         var data = new RuleConditionDTO(geography, 
-                                        RuleIdentifier.populationGrowth, 
+                                        RuleIdentifier.populationGrowth(), 
                                         0, 
                                         250_000, 
                                         30, 
@@ -163,7 +154,7 @@ class RuleCondition {
 
     static makeDefaultHouseholdMedianIncomeGrowth(geography) {
         var data = new RuleConditionDTO(geography,
-                                        RuleIdentifier.householdMedianIncomeGrowth,
+                                        RuleIdentifier.householdMedianIncomeGrowth(),
                                         0,
                                         100_000_000_000,
                                         30,
@@ -174,7 +165,7 @@ class RuleCondition {
 
     static makeDefaultHouseValueGrowth(geography) {
         var data = new RuleConditionDTO(geography,
-                                        RuleIdentifier.houseValueGrowth,
+                                        RuleIdentifier.houseValueGrowth(),
                                         0,
                                         100_000_000_000,
                                         40,
@@ -184,8 +175,6 @@ class RuleCondition {
     }
 }
 class Rule {
-    dto;
-
     get geography() {
         return this.dto.geography;
     }
@@ -219,15 +208,18 @@ class Rule {
     }
 }
 class RuleGradingSystem {
-    static letters = "letters"
-    static passFail = "passFail"
-
+    static letters() { 
+        return "letters";
+    }
+    static passFail() { 
+        return "passFail";
+    }
     static isValid(value) {
         var result = false;
 
         switch (value) {
-            case RuleGradingSystem.letters:
-            case RuleGradingSystem.passFail:
+            case RuleGradingSystem.letters():
+            case RuleGradingSystem.passFail():
                 result = true;
                 break;
             default:
@@ -238,51 +230,75 @@ class RuleGradingSystem {
     }
 }
 class RuleGrade {
-    static aPlus = "aPlus";
-    static a = "a";
-    static aMinus = "aMinus";
-    static bPlus = "bPlus";
-    static b = "b";
-    static bMinus = "bMinus";
-    static cPlus = "cPlus";
-    static c = "c";
-    static cMinus = "cMinus";
-    static dPlus = "dPlus";
-    static d = "d";
-    static dMinus = "dMinus";
-    static f = "f";
-    static notApplicable = "notApplicable";
-
-    type;
-    percent;
-    value;
+    static aPlus() { 
+        return "aPlus";
+    }
+    static a() { 
+        return "a";
+    }
+    static aMinus() { 
+        return "aMinus";
+    }
+    static bPlus() { 
+        return "bPlus";
+    }
+    static b() { 
+        return "b";
+    }
+    static bMinus() { 
+        return "bMinus";
+    }
+    static cPlus() { 
+        return "cPlus";
+    }
+    static c() { 
+        return "c";
+    }
+    static cMinus() { 
+        return "cMinus";
+    }
+    static dPlus() { 
+        return "dPlus";
+    }
+    static d() { 
+        return "d";
+    }
+    static dMinus() { 
+        return "dMinus";
+    }
+    static f() { 
+        return "f";
+    }
+    static notApplicable() { 
+        return "notApplicable";
+    }
 
     get letter() {
         switch (this.type) {
-            case RuleGrade.aPlus:
-            case RuleGrade.a:
-            case RuleGrade.aMinus:
+            case RuleGrade.aPlus():
+            case RuleGrade.a():
+            case RuleGrade.aMinus():
                 return "A";
                 break;
-            case RuleGrade.bPlus:
-            case RuleGrade.b:
-            case RuleGrade.bMinus:
+            case RuleGrade.bPlus():
+            case RuleGrade.b():
+            case RuleGrade.bMinus():
                 return "B";
                 break;
-            case RuleGrade.cPlus:
-            case RuleGrade.c:
-            case RuleGrade.cMinus:
+            case RuleGrade.cPlus():
+            case RuleGrade.c():
+            case RuleGrade.cMinus():
                 return "C";
                 break;
-            case RuleGrade.dPlus:
-            case RuleGrade.d:
-            case RuleGrade.dMinus:
+            case RuleGrade.dPlus():
+            case RuleGrade.d():
+            case RuleGrade.dMinus():
                 return "D";
                 break;
-            case RuleGrade.f:
+            case RuleGrade.f():
                 return "F";
                 break;
-            case RuleGrade.notApplicable:
+            case RuleGrade.notApplicable():
             default:
                 return "-";
                 break;
@@ -291,24 +307,24 @@ class RuleGrade {
 
     get modifier() {
         switch (this.type) {
-            case RuleGrade.aPlus:
-            case RuleGrade.bPlus:
-            case RuleGrade.cPlus:
-            case RuleGrade.dPlus:
+            case RuleGrade.aPlus():
+            case RuleGrade.bPlus():
+            case RuleGrade.cPlus():
+            case RuleGrade.dPlus():
                 return "+";
                 break;
-            case RuleGrade.aMinus:
-            case RuleGrade.bMinus:
-            case RuleGrade.cMinus:
-            case RuleGrade.dMinus:
+            case RuleGrade.aMinus():
+            case RuleGrade.bMinus():
+            case RuleGrade.cMinus():
+            case RuleGrade.dMinus():
                 return "-";
                 break;
-            case RuleGrade.a:
-            case RuleGrade.b:
-            case RuleGrade.c:
-            case RuleGrade.d:
-            case RuleGrade.f:
-            case RuleGrade.notApplicable:
+            case RuleGrade.a():
+            case RuleGrade.b():
+            case RuleGrade.c():
+            case RuleGrade.d():
+            case RuleGrade.f():
+            case RuleGrade.notApplicable():
             default:
                 return "";
                 break;
@@ -326,34 +342,34 @@ class RuleGrade {
     constructor(percent, value) {
         if (!Number.isNaN(percent) && !Number.isNaN(value)) {
             if (percent >= 1.0) {
-                this.type = RuleGrade.aPlus;
+                this.type = RuleGrade.aPlus();
             } else if (percent >= 0.93) {
-                this.type = RuleGrade.a;
+                this.type = RuleGrade.a();
             } else if (percent >= 0.90) {
-                this.type = RuleGrade.aMinus;
+                this.type = RuleGrade.aMinus();
             } else if (percent >= 0.87) {
-                this.type = RuleGrade.bPlus;
+                this.type = RuleGrade.bPlus();
             } else if (percent >= 0.83) {
-                this.type = RuleGrade.b;
+                this.type = RuleGrade.b();
             } else if (percent >= 0.80) {
-                this.type = RuleGrade.bMinus;
+                this.type = RuleGrade.bMinus();
             } else if (percent >= 0.77) {
-                this.type = RuleGrade.cPlus;
+                this.type = RuleGrade.cPlus();
             } else if (percent >= 0.73) {
-                this.type = RuleGrade.c;
+                this.type = RuleGrade.c();
             } else if (percent >= 0.70) {
-                this.type = RuleGrade.cMinus;
+                this.type = RuleGrade.cMinus();
             } else if (percent >= 0.67) {
-                this.type = RuleGrade.dPlus;
+                this.type = RuleGrade.dPlus();
             } else if (percent >= 0.63) {
-                this.type = RuleGrade.d;
+                this.type = RuleGrade.d();
             } else if (percent >= 0.60) {
-                this.type = RuleGrade.dMinus;
+                this.type = RuleGrade.dMinus();
             } else {
-                this.type = RuleGrade.f;
+                this.type = RuleGrade.f();
             }
         } else {
-            this.type = RuleGrade.notApplicable;
+            this.type = RuleGrade.notApplicable();
         }
 
         this.percent = percent;
@@ -366,12 +382,12 @@ class RuleGrade {
         }
 
         switch (gradingSystem) {
-            case RuleGradingSystem.passFail:
+            case RuleGradingSystem.passFail():
                 switch (this.type) {
-                    case RuleGrade.aPlus:
+                    case RuleGrade.aPlus():
                         return "P";
                         break;
-                    case RuleGrade.notApplicable:
+                    case RuleGrade.notApplicable():
                         return this.letter + this.modifier;
                         break;
                     default:
@@ -391,12 +407,12 @@ class RuleGrade {
         }
 
         switch (gradingSystem) {
-            case RuleGradingSystem.passFail:
+            case RuleGradingSystem.passFail():
                 switch (this.type) {
-                    case RuleGrade.aPlus:
+                    case RuleGrade.aPlus():
                         return "Pass";
                         break;
-                    case RuleGrade.notApplicable:
+                    case RuleGrade.notApplicable():
                         return "No Data";
                         break;
                     default:
@@ -406,7 +422,7 @@ class RuleGrade {
                 break;
             default:
                 switch (this.type) {
-                    case RuleGrade.notApplicable:
+                    case RuleGrade.notApplicable():
                         return "No Data";
                         break;
                     default:
@@ -423,64 +439,64 @@ class RuleGrade {
         }
 
         switch (gradingSystem) {
-            case RuleGradingSystem.passFail:
+            case RuleGradingSystem.passFail():
                 switch (this.type) {
-                    case RuleGrade.aPlus:
-                        return MBColor.mbGradeAPlus;
+                    case RuleGrade.aPlus():
+                        return MBColor.mbGradeAPlus();
                         break;
-                    case RuleGrade.notApplicable:
-                        return MBColor.mbClear;
+                    case RuleGrade.notApplicable():
+                        return MBColor.mbClear();
                         break;
                     default:
-                        return MBColor.mbGradeF;
+                        return MBColor.mbGradeF();
                         break;
                 }
                 break;
-            case RuleGradingSystem.letters:
+            case RuleGradingSystem.letters():
             default:
                 switch (this.type) {
-                    case RuleGrade.aPlus:
-                        return MBColor.mbGradeAPlus;
+                    case RuleGrade.aPlus():
+                        return MBColor.mbGradeAPlus();
                         break;
-                    case RuleGrade.a:
-                        return MBColor.mbGradeA;
+                    case RuleGrade.a():
+                        return MBColor.mbGradeA();
                         break;
-                    case RuleGrade.aMinus:
-                        return MBColor.mbGradeAMinus;
+                    case RuleGrade.aMinus():
+                        return MBColor.mbGradeAMinus();
                         break;
-                    case RuleGrade.bPlus:
-                        return MBColor.mbGradeBPlus;
+                    case RuleGrade.bPlus():
+                        return MBColor.mbGradeBPlus();
                         break;
-                    case RuleGrade.b:
-                        return MBColor.mbGradeB;
+                    case RuleGrade.b():
+                        return MBColor.mbGradeB();
                         break;
-                    case RuleGrade.bMinus:
-                        return MBColor.mbGradeBMinus;
+                    case RuleGrade.bMinus():
+                        return MBColor.mbGradeBMinus();
                         break;
-                    case RuleGrade.cPlus:
-                        return MBColor.mbGradeCPlus;
+                    case RuleGrade.cPlus():
+                        return MBColor.mbGradeCPlus();
                         break;
-                    case RuleGrade.c:
-                        return MBColor.mbGradeC;
+                    case RuleGrade.c():
+                        return MBColor.mbGradeC();
                         break;
-                    case RuleGrade.cMinus:
-                        return MBColor.mbGradeCMinus;
+                    case RuleGrade.cMinus():
+                        return MBColor.mbGradeCMinus();
                         break;
-                    case RuleGrade.dPlus:
-                        return MBColor.mbGradeDPlus;
+                    case RuleGrade.dPlus():
+                        return MBColor.mbGradeDPlus();
                         break;
-                    case RuleGrade.d:
-                        return MBColor.mbGradeD;
+                    case RuleGrade.d():
+                        return MBColor.mbGradeD();
                         break;
-                    case RuleGrade.dMinus:
-                        return MBColor.mbGradeDMinus;
+                    case RuleGrade.dMinus():
+                        return MBColor.mbGradeDMinus();
                         break;
-                    case RuleGrade.f:
-                        return MBColor.mbGradeF;
+                    case RuleGrade.f():
+                        return MBColor.mbGradeF();
                         break;
-                    case RuleGrade.notApplicable:
+                    case RuleGrade.notApplicable():
                     default:
-                        return MBColor.mbClear;
+                        return MBColor.mbClear();
                         break;
                 }
                 break;
@@ -494,7 +510,7 @@ class PopulationGrowthGrader {
         var firstYear = null;
         var firstValue = null;
 
-        GeoData.years.forEach(function(year, index) {
+        GeoData.years().forEach(function(year, index) {
             var value = geoData.getPopulationTotal(year);
 
             if (lastValue == null) {
@@ -541,7 +557,7 @@ class HouseholdMedianIncomeGrowthGrader {
         var lastYear = null;
         var lastValue = null;
 
-        GeoData.years.forEach(function(year, index) {
+        GeoData.years().forEach(function(year, index) {
             var value = geoData.getHouseholdIncome(year);
 
             if (lastValue == null) {
@@ -588,7 +604,7 @@ class HouseValueGrowthGrader {
         var lastYear = null;
         var lastValue = null;
 
-        GeoData.years.forEach(function(year, index) {
+        GeoData.years().forEach(function(year, index) {
             var value = geoData.getMedianHouseValue(year);
 
             if (lastValue == null) {
@@ -629,11 +645,6 @@ class HouseValueGrowthGrader {
     }
 }
 class RuleEngine {
-    rules;
-    populationGrowth;
-    householdMedianIncomeGrowth;
-    houseValueGrowth;
-
     constructor() {
         this.populationGrowth = new PopulationGrowthGrader();
         this.householdMedianIncomeGrowth = new HouseholdMedianIncomeGrowthGrader();
@@ -653,13 +664,13 @@ class RuleEngine {
             if (!rule.isActive) { return }
 
             switch (rule.identifier) {
-                case RuleIdentifier.populationGrowth:
+                case RuleIdentifier.populationGrowth():
                     result[rule.identifier] = self.populationGrowth.evaluate(geoData, rule);
                     break;
-                case RuleIdentifier.householdMedianIncomeGrowth:
+                case RuleIdentifier.householdMedianIncomeGrowth():
                     result[rule.identifier] = self.householdMedianIncomeGrowth.evaluate(geoData, rule);
                     break;
-                case RuleIdentifier.houseValueGrowth:
+                case RuleIdentifier.houseValueGrowth():
                     result[rule.identifier] = self.houseValueGrowth.evaluate(geoData, rule);
                     break;
                 default:
@@ -679,7 +690,7 @@ class RuleEngine {
 
     addPopulationGrowthRules() {
         var self = this;
-        var identifier = RuleIdentifier.populationGrowth;
+        var identifier = RuleIdentifier.populationGrowth();
 
         CensusGeography.all().forEach(function(geography, index) {
             var condition1 = new RuleConditionDTO(geography, identifier, 0, 250_000, 30.0, 2.0);
@@ -694,7 +705,7 @@ class RuleEngine {
 
     addHouseholdMedianIncomeGrowthRules() {
         var self = this;
-        var identifier = RuleIdentifier.householdMedianIncomeGrowth;
+        var identifier = RuleIdentifier.householdMedianIncomeGrowth();
 
         CensusGeography.all().forEach(function(geography, index) {
             var condition1 = new RuleConditionDTO(geography, identifier, 0, 100_000_000_000, 30.0, 2.0);
@@ -706,7 +717,7 @@ class RuleEngine {
 
     addHouseValueGrowthRules() {
         var self = this;
-        var identifier = RuleIdentifier.houseValueGrowth;
+        var identifier = RuleIdentifier.houseValueGrowth();
 
         CensusGeography.all().forEach(function(geography, index) {
             var condition1 = new RuleConditionDTO(geography, identifier, 0, 100_000_000_000, 40.0, 2.5);
@@ -717,17 +728,6 @@ class RuleEngine {
     }
 }
 class ReportCard {
-    gradingSystem;
-    populationContainer;
-    populationRate;
-    populationLetter;
-    householdIncomeContainer;
-    householdIncomeRate;
-    householdIncomeLetter;
-    houseValueContainer;
-    houseValueRate;
-    houseValueLetter;
-
     constructor(gradingSystem) {
         this.gradingSystem = gradingSystem;
 
@@ -745,17 +745,17 @@ class ReportCard {
     }
 
     applyGrades(grades) {
-        var populationGrade = grades[RuleIdentifier.populationGrowth];
+        var populationGrade = grades[RuleIdentifier.populationGrowth()];
         this.populationContainer.style.backgroundColor = populationGrade.color(this.gradingSystem);
         this.populationRate.innerHTML = populationGrade.rate;
         this.populationLetter.innerHTML = populationGrade.stringValue(this.gradingSystem);
 
-        var householdIncomeGrade = grades[RuleIdentifier.householdMedianIncomeGrowth];
+        var householdIncomeGrade = grades[RuleIdentifier.householdMedianIncomeGrowth()];
         this.householdIncomeContainer.style.backgroundColor = householdIncomeGrade.color(this.gradingSystem);
         this.householdIncomeRate.innerHTML = householdIncomeGrade.rate;
         this.householdIncomeLetter.innerHTML = householdIncomeGrade.stringValue(this.gradingSystem);
 
-        var houseValueGrade = grades[RuleIdentifier.houseValueGrowth];
+        var houseValueGrade = grades[RuleIdentifier.houseValueGrowth()];
         this.houseValueContainer.style.backgroundColor = houseValueGrade.color(this.gradingSystem);
         this.houseValueRate.innerHTML = houseValueGrade.rate;
         this.houseValueLetter.innerHTML = houseValueGrade.stringValue(this.gradingSystem);
