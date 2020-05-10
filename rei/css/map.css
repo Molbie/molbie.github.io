@@ -85,6 +85,30 @@
 .segmented-control > input:nth-of-type(10):checked ~ label:last-of-type:before {
   transform: translateX(calc(900% + 0px));
 }
+.segmented-control > input:nth-of-type(11):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1000% + 0px));
+}
+.segmented-control > input:nth-of-type(12):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1100% + 0px));
+}
+.segmented-control > input:nth-of-type(13):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1200% + 0px));
+}
+.segmented-control > input:nth-of-type(14):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1300% + 0px));
+}
+.segmented-control > input:nth-of-type(15):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1400% + 0px));
+}
+.segmented-control > input:nth-of-type(16):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1500% + 0px));
+}
+.segmented-control > input:nth-of-type(17):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1600% + 0px));
+}
+.segmented-control > input:nth-of-type(18):checked ~ label:last-of-type:before {
+  transform: translateX(calc(1700% + 0px));
+}
 .segmented-control label {
   flex: 1;
   text-align: center;
@@ -122,6 +146,9 @@
 }
 .segmented-control.overlay label:last-of-type:before {
   max-width: calc(10% - 0px);
+}
+.segmented-control.year label:last-of-type:before {
+  max-width: calc(5.8823529412% - 0px);
 }
 
 article {

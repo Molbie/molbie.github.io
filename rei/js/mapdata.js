@@ -375,12 +375,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.meta.landArea;
+            if (!isNaN(timePeriod.meta.landArea)) {
+                result = timePeriod.meta.landArea;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.meta.landArea != null) {
+                if (timePeriod.meta.landArea != null && !isNaN(timePeriod.meta.landArea)) {
                     result = timePeriod.meta.landArea;
                 }
                 
@@ -398,12 +400,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.meta.waterArea;
+            if (!isNaN(timePeriod.meta.waterArea)) {
+                result = timePeriod.meta.waterArea;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.meta.waterArea != null) {
+                if (timePeriod.meta.waterArea != null && !isNaN(timePeriod.meta.waterArea)) {
                     result = timePeriod.meta.waterArea;
                 }
                 
@@ -421,12 +425,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.population.total;
+            if (!isNaN(timePeriod.population.total)) {
+                result = timePeriod.population.total;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.population.total != null) {
+                if (timePeriod.population.total != null && !isNaN(timePeriod.population.total)) {
                     result = timePeriod.population.total;
                 }
                 
@@ -444,12 +450,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.household.total;
+            if (!isNaN(timePeriod.household.total)) {
+                result = timePeriod.household.total;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.household.total != null) {
+                if (timePeriod.household.total != null && !isNaN(timePeriod.household.total)) {
                     result = timePeriod.household.total;
                 }
                 
@@ -467,12 +475,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.age.median;
+            if (!isNaN(timePeriod.age.median)) {
+                result = timePeriod.age.median;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.age.median != null) {
+                if (timePeriod.age.median != null && !isNaN(timePeriod.age.median)) {
                     result = timePeriod.age.median;
                 }
                 
@@ -490,12 +500,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.income.family;
+            if (!isNaN(timePeriod.income.family)) {
+                result = timePeriod.income.family;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.income.family != null) {
+                if (timePeriod.income.family != null && !isNaN(timePeriod.income.family)) {
                     result = timePeriod.income.family;
                 }
                 
@@ -513,12 +525,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.income.household;
+            if (!isNaN(timePeriod.income.household)) {
+                result = timePeriod.income.household;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.income.household != null) {
+                if (timePeriod.income.household != null && !isNaN(timePeriod.income.household)) {
                     result = timePeriod.income.household;
                 }
                 
@@ -536,12 +550,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.income.perCapita;
+            if (!isNaN(timePeriod.income.perCapita)) {
+                result = timePeriod.income.perCapita;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.income.perCapita != null) {
+                if (timePeriod.income.perCapita != null && !isNaN(timePeriod.income.perCapita)) {
                     result = timePeriod.income.perCapita;
                 }
                 
@@ -559,12 +575,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.housingUnits.total;
+            if (!isNaN(timePeriod.housingUnits.total)) {
+                result = timePeriod.housingUnits.total;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.housingUnits.total != null) {
+                if (timePeriod.housingUnits.total != null && !isNaN(timePeriod.housingUnits.total)) {
                     result = timePeriod.housingUnits.total;
                 }
                 
@@ -582,12 +600,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.houseValue.median;
+            if (!isNaN(timePeriod.houseValue.median)) {
+                result = timePeriod.houseValue.median;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.houseValue.median != null) {
+                if (timePeriod.houseValue.median != null && !isNaN(timePeriod.houseValue.median)) {
                     result = timePeriod.houseValue.median;
                 }
                 
@@ -605,12 +625,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.houseValue.upperQuartile;
+            if (!isNaN(timePeriod.houseValue.upperQuartile)) {
+                result = timePeriod.houseValue.upperQuartile;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.houseValue.upperQuartile != null) {
+                if (timePeriod.houseValue.upperQuartile != null && !isNaN(timePeriod.houseValue.upperQuartile)) {
                     result = timePeriod.houseValue.upperQuartile;
                 }
                 
@@ -628,12 +650,14 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            result = timePeriod.houseValue.lowerQuartile;
+            if (!isNaN(timePeriod.houseValue.lowerQuartile)) {
+                result = timePeriod.houseValue.lowerQuartile;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
                 
-                if (timePeriod.houseValue.lowerQuartile != null) {
+                if (timePeriod.houseValue.lowerQuartile != null && !isNaN(timePeriod.houseValue.lowerQuartile)) {
                     result = timePeriod.houseValue.lowerQuartile;
                 }
                 
@@ -652,16 +676,20 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            count = timePeriod.occupancy.vacant;
-            total = timePeriod.occupancy.total;
+            if (!isNaN(timePeriod.occupancy.vacant)) {
+                count = timePeriod.occupancy.vacant;
+            }
+            if (!isNaN(timePeriod.occupancy.total)) {
+                total = timePeriod.occupancy.total;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
-                if (count == null && timePeriod.occupancy.vacant != null) {
+                if (count == null && timePeriod.occupancy.vacant != null && !isNaN(timePeriod.occupancy.vacant)) {
                     count = timePeriod.occupancy.vacant;
                 }
-                if (total == null && timePeriod.occupancy.total != null) {
+                if (total == null && timePeriod.occupancy.total != null && !isNaN(timePeriod.occupancy.total)) {
                     total = timePeriod.occupancy.total;
                 }
                 
@@ -684,16 +712,20 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            count = timePeriod.poverty.below;
-            total = timePeriod.poverty.total;
+            if (!isNaN(timePeriod.poverty.below)) {
+                count = timePeriod.poverty.below;
+            }
+            if (!isNaN(timePeriod.poverty.total)) {
+                total = timePeriod.poverty.total;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
-                if (count == null && timePeriod.poverty.below != null) {
+                if (count == null && timePeriod.poverty.below != null && !isNaN(timePeriod.poverty.below)) {
                     count = timePeriod.poverty.below;
                 }
-                if (total == null && timePeriod.poverty.total != null) {
+                if (total == null && timePeriod.poverty.total != null && !isNaN(timePeriod.poverty.total)) {
                     total = timePeriod.poverty.total;
                 }
                 
@@ -716,16 +748,20 @@ class GeoData {
         
         if (year != null) {
             var timePeriod = this.getData(year);
-            count = timePeriod.employment.unemployed;
-            total = timePeriod.employment.inLaborForce;
+            if (!isNaN(timePeriod.employment.unemployed)) {
+                count = timePeriod.employment.unemployed;
+            }
+            if (!isNaN(timePeriod.employment.inLaborForce)) {
+                total = timePeriod.employment.inLaborForce;
+            }
         } else {
             for (const year of GeoData.years()) {
                 var timePeriod = this.getData(year);
 
-                if (count == null && timePeriod.employment.unemployed != null) {
+                if (count == null && timePeriod.employment.unemployed != null && !isNaN(timePeriod.employment.unemployed)) {
                     count = timePeriod.employment.unemployed;
                 }
-                if (total == null && timePeriod.employment.inLaborForce != null) {
+                if (total == null && timePeriod.employment.inLaborForce != null && !isNaN(timePeriod.employment.inLaborForce)) {
                     total = timePeriod.employment.inLaborForce;
                 }
                 
@@ -796,348 +832,327 @@ class MapData {
         return geoData.getName(null);
     }
 
-    getLandArea(geoId) {
+    getLandArea(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getLandArea(null);
+        return geoData.getLandArea(year);
     }
 
-    getAllLandArea(year) {
-        var result = 0;
-
+    getLandAreaStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getLandArea(year);
-
-            if (value != null) {
-                result += value;
+            
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getWaterArea(geoId) {
+    getWaterArea(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getWaterArea(null);
+        return geoData.getWaterArea(year);
     }
 
-    getPopulationTotal(geoId) {
+    getWaterAreaStats(year) {
+        var values = [];
+        
+        for (const geoId in this.data) {
+            var geoData = this.data[geoId];
+            var value = geoData.getWaterArea(year);
+            
+            if (value != null && !isNaN(value)) {
+                values.push(value);
+            }
+        }
+
+        return new NumberStats(values);
+    }
+
+    getPopulationTotal(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getPopulationTotal(null);
+        return geoData.getPopulationTotal(year);
     }
 
-    getAllPopulation(year) {
-        var result = 0;
-
+    getPopulationTotalStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getPopulationTotal(year);
-
-            if (value != null) {
-                result += value;
+            
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getHouseholdTotal(geoId) {
-        var geoData = this.getGeoData(geoId);
-        return geoData.getHouseholdTotal(null);
+    getPopulationDensity(geoId, year) {
+        var population = this.getPopulationTotal(geoId, year);
+        var landArea = this.getLandArea(geoId, year);
+        var density = population / landArea;
+
+        return isNaN(density) ? null : density;
     }
 
-    getMedianAge(geoId) {
+    getPopulationDensityStats(year) {
+        var values = [];
+        
+        for (const geoId in this.data) {
+            var population = this.getPopulationTotal(geoId, year);
+            var landArea = this.getLandArea(geoId, year);
+            var density = population / landArea;
+            
+            if (density != null && !isNaN(density)) {
+                values.push(density);
+            }
+        }
+
+        return new NumberStats(values);
+    }
+
+    getHouseholdTotal(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getMedianAge(null);
+        return geoData.getHouseholdTotal(year);
+    }
+
+    getHouseholdTotalStats(year) {
+        var values = [];
+        
+        for (const geoId in this.data) {
+            var geoData = this.data[geoId];
+            var value = geoData.getHouseholdTotal(year);
+
+            if (value != null && !isNaN(value)) {
+                values.push(value);
+            }
+        }
+
+        return new NumberStats(values);
+    }
+
+    getMedianAge(geoId, year) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getMedianAge(year);
     }
     
-    getMaxAge(year) {
-        var result = 0;
-
+    getMedianAgeStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getMedianAge(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinAge(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getMedianAge(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
-    }
-
-    getFamilyIncome(geoId) {
+    getFamilyIncome(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getFamilyIncome(null);
+        return geoData.getFamilyIncome(year);
     }
 
-    getMaxFamilyIncome(year) {
-        var result = 0;
-
+    getFamilyIncomeStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getFamilyIncome(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinFamilyIncome(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getFamilyIncome(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
-    }
-
-    getHouseholdIncome(geoId) {
+    getHouseholdIncome(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getHouseholdIncome(null);
+        return geoData.getHouseholdIncome(year);
     }
 
-    getMaxHouseholdIncome(year) {
-        var result = 0;
-
+    getHouseholdIncomeStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getHouseholdIncome(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinHouseholdIncome(year) {
-        var result = Number.MAX_VALUE;
+    getPerCapitaIncome(geoId, year) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getPerCapitaIncome(year);
+    }
 
+    getPerCapitaIncomeStats(year) {
+        var values = [];
+        
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
-            var value = geoData.getHouseholdIncome(year);
+            var value = geoData.getPerCapitaIncome(year);
 
-            if (value != null) {
-                result = Math.min(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getPerCapitaIncome(geoId) {
+    getHousingUnitsTotal(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getPerCapitaIncome(null);
+        return geoData.getHousingUnitsTotal(year);
     }
 
-    getHousingUnitsTotal(geoId) {
-        var geoData = this.getGeoData(geoId);
-        return geoData.getHousingUnitsTotal(null);
-    }
-
-    getMaxHousingUnits(year) {
-        var result = 0;
+    getHousingUnitsTotalStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getHousingUnitsTotal(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinHousingUnits(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getHousingUnitsTotal(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
-    }
-
-    getMedianHouseValue(geoId) {
+    getMedianHouseValue(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getMedianHouseValue(null);
+        return geoData.getMedianHouseValue(year);
     }
 
-    getMaxHouseValue(year) {
-        var result = 0;
+    getMedianHouseValueStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getMedianHouseValue(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinHouseValue(year) {
-        var result = Number.MAX_VALUE;
+    getUpperQuartileHouseValue(geoId, year) {
+        var geoData = this.getGeoData(geoId);
+        return geoData.getUpperQuartileHouseValue(year);
+    }
+
+    getUpperQuartileHouseValueStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
-            var value = geoData.getMedianHouseValue(year);
+            var value = geoData.getUpperQuartileHouseValue(year);
 
-            if (value != null) {
-                result = Math.min(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getUpperQuartileHouseValue(geoId) {
+    getLowerQuartileHouseValue(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getUpperQuartileHouseValue(null);
+        return geoData.getLowerQuartileHouseValue(year);
     }
 
-    getLowerQuartileHouseValue(geoId) {
+    getLowerQuartileHouseValueStats(year) {
+        var values = [];
+
+        for (const geoId in this.data) {
+            var geoData = this.data[geoId];
+            var value = geoData.getLowerQuartileHouseValue(year);
+
+            if (value != null && !isNaN(value)) {
+                values.push(value);
+            }
+        }
+
+        return new NumberStats(values);
+    }
+
+    getVacancyRate(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getLowerQuartileHouseValue(null);
+        return geoData.getVacancyRate(year);
     }
 
-    getVacancyRate(geoId) {
-        var geoData = this.getGeoData(geoId);
-        return geoData.getVacancyRate(null);
-    }
-
-    getMaxVacancyRate(year) {
-        var result = 0;
+    getVacancyRateStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getVacancyRate(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinVacancyRate(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getVacancyRate(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
-    }
-
-    getPovertyRate(geoId) {
+    getPovertyRate(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getPovertyRate(null);
+        return geoData.getPovertyRate(year);
     }
 
-    getMaxPoverty(year) {
-        var result = 0;
+    getPovertyRateStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getPovertyRate(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
+        return new NumberStats(values);
     }
 
-    getMinPoverty(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getPovertyRate(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
-    }
-
-    getUnemploymentRate(geoId) {
+    getUnemploymentRate(geoId, year) {
         var geoData = this.getGeoData(geoId);
-        return geoData.getUnemploymentRate(null);
+        return geoData.getUnemploymentRate(year);
     }
 
-    getMaxUnemployment(year) {
-        var result = 0;
+    getUnemploymentRateStats(year) {
+        var values = [];
 
         for (const geoId in this.data) {
             var geoData = this.data[geoId];
             var value = geoData.getUnemploymentRate(year);
 
-            if (value != null) {
-                result = Math.max(result, value);
+            if (value != null && !isNaN(value)) {
+                values.push(value);
             }
         }
 
-        return result;
-    }
-
-    getMinUnemployment(year) {
-        var result = Number.MAX_VALUE;
-
-        for (const geoId in this.data) {
-            var geoData = this.data[geoId];
-            var value = geoData.getUnemploymentRate(year);
-
-            if (value != null) {
-                result = Math.min(result, value);
-            }
-        }
-
-        return result;
+        return new NumberStats(values);
     }
 }
