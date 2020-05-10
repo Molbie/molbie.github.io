@@ -213,6 +213,7 @@ class Map {
 }
 class MapOverlay {
     constructor() {
+        this.statsYear = document.getElementById('statsYear');
         this.geoId = document.getElementById('geoId');
         this.geoName = document.getElementById('geoName');
         this.landArea = document.getElementById('landArea');
@@ -231,6 +232,10 @@ class MapOverlay {
         this.vacancyRate = document.getElementById('vacancyRate');
         this.povertyRate = document.getElementById('povertyRate');
         this.unemploymentRate = document.getElementById('unemploymentRate');
+    }
+
+    setYear(value) {
+        this.statsYear.innerHTML = value == null ? "Recent" : value;
     }
 
     setGeoId(value) {
@@ -513,6 +518,7 @@ class MapController {
         self.map.addSelectedLayer('selected-layer', 'polygons', '#bdbdbd', true);
         self.map.addBorderLayer('border-layer', 'polygons', '#252525', true);
 
+        self.clearOverlay();
         self.rawData.hasMapLayers = true;
         self.rawData.isReloading = false;
     }
@@ -534,7 +540,11 @@ class MapController {
     }
 
     onMouseMove(e) {
-        var geography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        if (selectedYear == 'recent') {
+            selectedYear = null;
+        }
 
         if (e.features.length > 0) {
             var newHoverId = e.features[0].id;
@@ -543,9 +553,9 @@ class MapController {
                 geoId = "";
             }
             
-            this.updateHover(newHoverId, geoId, geography)
+            this.updateHover(newHoverId, geoId, selectedGeography, selectedYear);
         } else {
-            this.clearOverlay()
+            this.clearOverlay();
         }
     }
 
@@ -554,18 +564,22 @@ class MapController {
     }
 
     onMouseLeave(e) {
-        var geography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
 
         this.map.setMousePointerEnabled(false);
         
-        if (this.hoverId[geography]) {
-            this.map.setHoverEnabled('polygons', this.hoverId[geography], false);
+        if (this.hoverId[selectedGeography]) {
+            this.map.setHoverEnabled('polygons', this.hoverId[selectedGeography], false);
         }
-        this.hoverId[geography] = null;
+        this.hoverId[selectedGeography] = null;
     }
 
     onMouseClick(e) {
-        var geography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        if (selectedYear == 'recent') {
+            selectedYear = null;
+        }
         
         if (e.features.length > 0) {
             var geoId = e.features[0].properties.GEOID;
@@ -574,30 +588,30 @@ class MapController {
             }
             var selectedId = e.features[0].id;
             
-            if (selectedId != this.selectedId[geography]) {
-                if (this.selectedId[geography]) {
-                    this.map.setSelectedEnabled('polygons', this.selectedId[geography], false);
+            if (selectedId != this.selectedId[selectedGeography]) {
+                if (this.selectedId[selectedGeography]) {
+                    this.map.setSelectedEnabled('polygons', this.selectedId[selectedGeography], false);
                 }
-                if (selectedId == this.hoverId[geography]) {
-                    this.updateHover(null, geoId, geography);
+                if (selectedId == this.hoverId[selectedGeography]) {
+                    this.updateHover(null, geoId, selectedGeography, selectedYear);
                 }
-                this.selectedId[geography] = selectedId
-                this.map.setSelectedEnabled('polygons', this.selectedId[geography], true);
+                this.selectedId[selectedGeography] = selectedId
+                this.map.setSelectedEnabled('polygons', this.selectedId[selectedGeography], true);
             } else {
-                this.map.setSelectedEnabled('polygons', this.selectedId[geography], false);
-                this.selectedId[geography] = null;
-                this.updateHover(selectedId, geoId, geography);
+                this.map.setSelectedEnabled('polygons', this.selectedId[selectedGeography], false);
+                this.selectedId[selectedGeography] = null;
+                this.updateHover(selectedId, geoId, selectedGeography, selectedYear);
             }
             
-            if (this.selectedId[geography] != null) {
-                this.updateOverlay(geoId, geography);
+            if (this.selectedId[selectedGeography] != null) {
+                this.updateOverlay(geoId, selectedGeography, selectedYear);
             }
 
-            this.update(geoId, geography);
+            this.update(geoId, selectedGeography, selectedYear);
         }
     }
 
-    updateHover(hoverId, geoId, geography) {
+    updateHover(hoverId, geoId, geography, year) {
         if (this.hoverId[geography]) {
             this.map.setHoverEnabled('polygons', this.hoverId[geography], false);
         }
@@ -607,48 +621,56 @@ class MapController {
         }
         
         if (this.selectedId[geography] == null) {
-            this.updateOverlay(geoId, geography);
+            this.updateOverlay(geoId, geography, year);
         }
     }
 
-    update(geoId, geography) {
+    update(geoId, geography, year) {
         var geoData = this.mapData[geography].getGeoData(geoId);
         this.mapCharts.update(geoData);
     }
 
-    updateOverlay(geoId, geography) {
-        var landArea = this.mapData[geography].getLandArea(geoId);
-        var population = this.mapData[geography].getPopulationTotal(geoId);
+    updateOverlay(geoId, geography, year) {
+        var geoData = this.mapData[geography].getGeoData(geoId);
+
+        var landArea = geoData.getLandArea(year);
+        var population = geoData.getPopulationTotal(year);
         var populationDensity = null;
         if (landArea != null && population != null) {
             populationDensity = population / landArea;
         }
 
+        this.overlay.setYear(year);
         this.overlay.setGeoId(geoId);
-        this.overlay.setGeoName(this.mapData[geography].getName(geoId));
+        this.overlay.setGeoName(geoData.getName(year));
         this.overlay.setLandArea(landArea);
-        this.overlay.setWaterArea(this.mapData[geography].getWaterArea(geoId));
+        this.overlay.setWaterArea(geoData.getWaterArea(year));
         this.overlay.setPopulationDensity(populationDensity);
         this.overlay.setPopulation(population);
-        this.overlay.setHouseholds(this.mapData[geography].getHouseholdTotal(geoId));
-        this.overlay.setMedianAge(this.mapData[geography].getMedianAge(geoId));
-        this.overlay.setFamilyIncome(this.mapData[geography].getFamilyIncome(geoId));
-        this.overlay.setHouseholdIncome(this.mapData[geography].getHouseholdIncome(geoId));
-        this.overlay.setPerCapitaIncome(this.mapData[geography].getPerCapitaIncome(geoId));
-        this.overlay.setHousingUnits(this.mapData[geography].getHousingUnitsTotal(geoId));
-        this.overlay.setHouseValue(this.mapData[geography].getMedianHouseValue(geoId));
-        this.overlay.setUpperHouseValue(this.mapData[geography].getUpperQuartileHouseValue(geoId));
-        this.overlay.setLowerHouseValue(this.mapData[geography].getLowerQuartileHouseValue(geoId));
-        this.overlay.setVacancyRate(this.mapData[geography].getVacancyRate(geoId));
-        this.overlay.setPovertyRate(this.mapData[geography].getPovertyRate(geoId));
-        this.overlay.setUnemploymentRate(this.mapData[geography].getUnemploymentRate(geoId));
+        this.overlay.setHouseholds(geoData.getHouseholdTotal(year));
+        this.overlay.setMedianAge(geoData.getMedianAge(year));
+        this.overlay.setFamilyIncome(geoData.getFamilyIncome(year));
+        this.overlay.setHouseholdIncome(geoData.getHouseholdIncome(year));
+        this.overlay.setPerCapitaIncome(geoData.getPerCapitaIncome(year));
+        this.overlay.setHousingUnits(geoData.getHousingUnitsTotal(year));
+        this.overlay.setHouseValue(geoData.getMedianHouseValue(year));
+        this.overlay.setUpperHouseValue(geoData.getUpperQuartileHouseValue(year));
+        this.overlay.setLowerHouseValue(geoData.getLowerQuartileHouseValue(year));
+        this.overlay.setVacancyRate(geoData.getVacancyRate(year));
+        this.overlay.setPovertyRate(geoData.getPovertyRate(year));
+        this.overlay.setUnemploymentRate(geoData.getUnemploymentRate(year));
 
-        var geoData = this.mapData[geography].getGeoData(geoId);
         var grades = this.ruleEngine.evaluate(geography, geoData);
         this.reportCard.applyGrades(grades);
     }
 
     clearOverlay() {
+        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        if (selectedYear == 'recent') {
+            selectedYear = null;
+        }
+
+        this.overlay.setYear(selectedYear);
         this.overlay.setGeoId(null);
         this.overlay.setGeoName(null);
         this.overlay.setLandArea(null);
