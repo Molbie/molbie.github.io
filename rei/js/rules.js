@@ -340,7 +340,7 @@ class RuleGrade {
     }
 
     constructor(percent, value) {
-        if (!Number.isNaN(percent) && !Number.isNaN(value)) {
+        if (percent != null && value != null && !Number.isNaN(percent) && !Number.isNaN(value)) {
             if (percent >= 1.0) {
                 this.type = RuleGrade.aPlus();
             } else if (percent >= 0.93) {
@@ -756,6 +756,23 @@ class ReportCard {
         this.householdIncomeLetter.innerHTML = householdIncomeGrade.stringValue(this.gradingSystem);
 
         var houseValueGrade = grades[RuleIdentifier.houseValueGrowth()];
+        this.houseValueContainer.style.backgroundColor = houseValueGrade.color(this.gradingSystem);
+        this.houseValueRate.innerHTML = houseValueGrade.rate;
+        this.houseValueLetter.innerHTML = houseValueGrade.stringValue(this.gradingSystem);
+    }
+
+    clearGrades() {
+        var populationGrade = new RuleGrade(null, null);
+        this.populationContainer.style.backgroundColor = populationGrade.color(this.gradingSystem);
+        this.populationRate.innerHTML = populationGrade.rate;
+        this.populationLetter.innerHTML = populationGrade.stringValue(this.gradingSystem);
+
+        var householdIncomeGrade = new RuleGrade(null, null);
+        this.householdIncomeContainer.style.backgroundColor = householdIncomeGrade.color(this.gradingSystem);
+        this.householdIncomeRate.innerHTML = householdIncomeGrade.rate;
+        this.householdIncomeLetter.innerHTML = householdIncomeGrade.stringValue(this.gradingSystem);
+
+        var houseValueGrade = new RuleGrade(null, null);
         this.houseValueContainer.style.backgroundColor = houseValueGrade.color(this.gradingSystem);
         this.houseValueRate.innerHTML = houseValueGrade.rate;
         this.houseValueLetter.innerHTML = houseValueGrade.stringValue(this.gradingSystem);

@@ -689,5 +689,7 @@ class MapController {
         this.overlay.setVacancyRate(null);
         this.overlay.setPovertyRate(null);
         this.overlay.setUnemploymentRate(null);
+        
+        this.reportCard.clearGrades();
     }
 }
