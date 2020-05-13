@@ -35,6 +35,9 @@
         <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
         <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" rel="stylesheet" />
         <link href="https://molbie.co/rei/css/map.css" rel="stylesheet" />
+        <link href="https://molbie.co/rei/css/anypicker-font.css" rel="stylesheet" />
+        <link href="https://molbie.co/rei/css/anypicker.css" rel="stylesheet" />
+        <link href="https://molbie.co/rei/css/anypicker-ios.css" rel="stylesheet" />
 
         <!--[if lt IE 9]><script src="https://molbie.co/js/ie8-responsive-file-warning.js"></script><![endif]-->
         <script src="https://molbie.co/js/ie-emulation-modes-warning.js"></script>
@@ -78,115 +81,23 @@
             </div>
         </nav>
         <div class="container-fluid">
-            <div class="column-full segmented-control geography">
-                <input type="radio" name="geography-selection" value="nation" id="geography-nation" />
-                <label for="geography-nation">Nation</label>
-              
-                <input type="radio" name="geography-selection" value="region" id="geography-region" />
-                <label for="geography-region">Region</label>
-              
-                <input type="radio" name="geography-selection" value="division" id="geography-division" />
-                <label for="geography-division">Division</label>
-                
-                <input type="radio" name="geography-selection" value="state" id="geography-state" />
-                <label for="geography-state">State</label>
-              
-                <input type="radio" name="geography-selection" value="statisticalArea" id="geography-statisticalArea" />
-                <label for="geography-statisticalArea">Statistical Area</label>
-                
-                <input type="radio" name="geography-selection" value="county" id="geography-county" checked />
-                <label for="geography-county">County</label>
-                
-                <input type="radio" name="geography-selection" value="place" id="geography-place" />
-                <label for="geography-place">City</label>
-                
-                <input type="radio" name="geography-selection" value="tract" id="geography-tract" />
-                <label for="geography-tract">Tract</label>
+            <div class="column-thirds">
+                <span class="primary-stat">
+                    <span class="name" style="text-align: center;">Geography</span>
+                    <span class="value" style="text-align: center; margin-top: 2px;"><input type="text" id="geography-picker" value="County" data-val="county" readonly="" class="mappicker" /></span>
+                </span>
             </div>
-
-            <div class="column-full segmented-control overlay">
-                <input type="radio" name="overlay-selection" value="standard" id="overlay-standard" />
-                <label for="overlay-standard">Standard</label>
-
-                <input type="radio" name="overlay-selection" value="populationDensity" id="overlay-populationDensity" checked />
-                <label for="overlay-populationDensity">Population Density</label>
-
-                <input type="radio" name="overlay-selection" value="householdIncome" id="overlay-householdIncome" />
-                <label for="overlay-householdIncome">Household Income</label>
-
-                <input type="radio" name="overlay-selection" value="familyIncome" id="overlay-familyIncome" />
-                <label for="overlay-familyIncome">Family Income</label>
-
-                <input type="radio" name="overlay-selection" value="houseValue" id="overlay-houseValue" />
-                <label for="overlay-houseValue">House Value</label>
-
-                <input type="radio" name="overlay-selection" value="housingUnits" id="overlay-housingUnits" />
-                <label for="overlay-housingUnits">Housing Units</label>
-
-                <input type="radio" name="overlay-selection" value="vacancyRate" id="overlay-vacancyRate" />
-                <label for="overlay-vacancyRate">Vacancy</label>
-
-                <input type="radio" name="overlay-selection" value="age" id="overlay-age" />
-                <label for="overlay-age">Age</label>
-
-                <input type="radio" name="overlay-selection" value="poverty" id="overlay-poverty" />
-                <label for="overlay-poverty">Poverty</label>
-
-                <input type="radio" name="overlay-selection" value="unemployment" id="overlay-unemployment" />
-                <label for="overlay-unemployment">Unemployment</label>
+            <div class="column-thirds">
+                <span class="primary-stat">
+                    <span class="name" style="text-align: center;">Overlay</span>
+                    <span class="value" style="text-align: center; margin-top: 2px;"><input type="text" id="overlay-picker" value="Population Density" data-val="populationDensity" readonly="" class="mappicker" /></span>
+                </span>
             </div>
-
-            <div class="column-full segmented-control year">
-                <input type="radio" name="year-selection" value="2000" id="year-2000" />
-                <label for="year-2000">2000</label>
-
-                <input type="radio" name="year-selection" value="2005" id="year-2005" />
-                <label for="year-2005">2005</label>
-
-                <input type="radio" name="year-selection" value="2006" id="year-2006" />
-                <label for="year-2006">2006</label>
-
-                <input type="radio" name="year-selection" value="2007" id="year-2007" />
-                <label for="year-2007">2007</label>
-
-                <input type="radio" name="year-selection" value="2008" id="year-2008" />
-                <label for="year-2008">2008</label>
-
-                <input type="radio" name="year-selection" value="2009" id="year-2009" />
-                <label for="year-2009">2009</label>
-
-                <input type="radio" name="year-selection" value="2010" id="year-2010" />
-                <label for="year-2010">2010</label>
-
-                <input type="radio" name="year-selection" value="2011" id="year-2011" />
-                <label for="year-2011">2011</label>
-
-                <input type="radio" name="year-selection" value="2012" id="year-2012" />
-                <label for="year-2012">2012</label>
-
-                <input type="radio" name="year-selection" value="2013" id="year-2013" />
-                <label for="year-2013">2013</label>
-
-                <input type="radio" name="year-selection" value="2014" id="year-2014" />
-                <label for="year-2014">2014</label>
-
-                <input type="radio" name="year-selection" value="2015" id="year-2015" />
-                <label for="year-2015">2015</label>
-
-                <input type="radio" name="year-selection" value="2016" id="year-2016" />
-                <label for="year-2016">2016</label>
-
-                <input type="radio" name="year-selection" value="2017" id="year-2017" />
-                <label for="year-2017">2017</label>
-
-                <input type="radio" name="year-selection" value="2018" id="year-2018" />
-                <label for="year-2018">2018</label>
-
-                <input type="radio" name="year-selection" value="2019" id="year-2019" />
-                <label for="year-2019">2019</label>
-
-                <input type="radio" name="year-selection" value="recent" id="year-recent" checked />
-                <label for="year-recent">Recent</label>
+            <div class="column-thirds">
+                <span class="primary-stat">
+                    <span class="name" style="text-align: center;">Year</span>
+                    <span class="value" style="text-align: center; margin-top: 2px;"><input type="text" id="year-picker" value="Recent" data-val="recent" readonly="" class="mappicker" /></span>
+                </span>
             </div>
 
             <div id="geocoder" class="column-full geocoder"></div>
@@ -411,6 +322,319 @@
                 </article>
             </div>
 
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Jobs
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalJobsQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalJobsQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalJobsQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalJobsQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Hires
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalHiresQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalHiresQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalHiresQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="totalHiresQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total New Hires
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="newHiresQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="newHiresQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="newHiresQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="newHiresQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Separations
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="separationsQ1">-</span>
+                            <span class="name">Q1 </span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="separationsQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="separationsQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="separationsQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Job Gains
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsGainQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsGainQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsGainQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsGainQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Job Losses
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsLossQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsLossQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsLossQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="jobsLossQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Net Jobs
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="netJobsQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="netJobsQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="netJobsQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="netJobsQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
+                            <a class="infotooltip">QWI: Total Payroll
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="payrollQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="payrollQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="payrollQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="payrollQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+
             <header class="column-full first">
                 <h1 class="title">Trends - <span id="chartName">click on a geographic area to load the data</span></h1>
             </header>
@@ -444,6 +668,18 @@
                     <div class="column-full">
                         <canvas id="unemploymentChart"></canvas>
                     </div>
+                    <div class="column-full qwi">
+                        <canvas id="totalJobsChart"></canvas>
+                    </div>
+                    <div class="column-full qwi">
+                        <canvas id="hiringChart"></canvas>
+                    </div>
+                    <div class="column-full qwi">
+                        <canvas id="jobsChart"></canvas>
+                    </div>
+                    <div class="column-full qwi">
+                        <canvas id="payrollChart"></canvas>
+                    </div>
                 </article>
             </div>
         </div>
@@ -474,10 +710,14 @@
         <script src="https://molbie.co/rei/js/mapdata.js"></script>
         <script src="https://molbie.co/rei/js/mapcharts.js"></script>
         <script src="https://molbie.co/rei/js/mapcontroller.js"></script>
+        <script src="https://molbie.co/rei/js/anypicker.js"></script>
+        <script src="https://molbie.co/rei/js/pickers.js"></script>
         
         <script>
             $(window).load(function() {
                 'use strict';
+
+                createMapPickers();
 
                 var mapController = new MapController("pk.eyJ1IjoicHJvZ3JhbW1lci1icmlhbiIsImEiOiJjajF5YmNleHQwMGNhMnFxa3dvaHZmaDZjIn0.NQfth9E2BbhzMBSkQMv0JA", 
                                                       "48", 

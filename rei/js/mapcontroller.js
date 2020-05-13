@@ -213,6 +213,7 @@ class Map {
 }
 class MapOverlay {
     constructor() {
+        this.formatter = new Intl.NumberFormat();
         this.statsYear = document.getElementById('statsYear');
         this.geoId = document.getElementById('geoId');
         this.geoName = document.getElementById('geoName');
@@ -232,6 +233,98 @@ class MapOverlay {
         this.vacancyRate = document.getElementById('vacancyRate');
         this.povertyRate = document.getElementById('povertyRate');
         this.unemploymentRate = document.getElementById('unemploymentRate');
+        this.totalJobsQ1 = document.getElementById('totalJobsQ1');
+        this.totalJobsQ2 = document.getElementById('totalJobsQ2');
+        this.totalJobsQ3 = document.getElementById('totalJobsQ3');
+        this.totalJobsQ4 = document.getElementById('totalJobsQ4');
+        this.totalHiresQ1 = document.getElementById('totalHiresQ1');
+        this.totalHiresQ2 = document.getElementById('totalHiresQ2');
+        this.totalHiresQ3 = document.getElementById('totalHiresQ3');
+        this.totalHiresQ4 = document.getElementById('totalHiresQ4');
+        this.newHiresQ1 = document.getElementById('newHiresQ1');
+        this.newHiresQ2 = document.getElementById('newHiresQ2');
+        this.newHiresQ3 = document.getElementById('newHiresQ3');
+        this.newHiresQ4 = document.getElementById('newHiresQ4');
+        this.separationsQ1 = document.getElementById('separationsQ1');
+        this.separationsQ2 = document.getElementById('separationsQ2');
+        this.separationsQ3 = document.getElementById('separationsQ3');
+        this.separationsQ4 = document.getElementById('separationsQ4');
+        this.jobsGainQ1 = document.getElementById('jobsGainQ1');
+        this.jobsGainQ2 = document.getElementById('jobsGainQ2');
+        this.jobsGainQ3 = document.getElementById('jobsGainQ3');
+        this.jobsGainQ4 = document.getElementById('jobsGainQ4');
+        this.jobsLossQ1 = document.getElementById('jobsLossQ1');
+        this.jobsLossQ2 = document.getElementById('jobsLossQ2');
+        this.jobsLossQ3 = document.getElementById('jobsLossQ3');
+        this.jobsLossQ4 = document.getElementById('jobsLossQ4');
+        this.netJobsQ1 = document.getElementById('netJobsQ1');
+        this.netJobsQ2 = document.getElementById('netJobsQ2');
+        this.netJobsQ3 = document.getElementById('netJobsQ3');
+        this.netJobsQ4 = document.getElementById('netJobsQ4');
+        this.payrollQ1 = document.getElementById('payrollQ1');
+        this.payrollQ2 = document.getElementById('payrollQ2');
+        this.payrollQ3 = document.getElementById('payrollQ3');
+        this.payrollQ4 = document.getElementById('payrollQ4');
+    }
+
+    update(geoId, year, geoData, landArea, population, populationDensity) {
+        this.setYear(year);
+        this.setGeoId(geoId);
+        this.setGeoName(geoData.getName(year));
+        this.setLandArea(landArea);
+        this.setWaterArea(geoData.getWaterArea(year));
+        this.setPopulationDensity(populationDensity);
+        this.setPopulation(population);
+        this.setHouseholds(geoData.getHouseholdTotal(year));
+        this.setMedianAge(geoData.getMedianAge(year));
+        this.setFamilyIncome(geoData.getFamilyIncome(year));
+        this.setHouseholdIncome(geoData.getHouseholdIncome(year));
+        this.setPerCapitaIncome(geoData.getPerCapitaIncome(year));
+        this.setHousingUnits(geoData.getHousingUnitsTotal(year));
+        this.setHouseValue(geoData.getMedianHouseValue(year));
+        this.setUpperHouseValue(geoData.getUpperQuartileHouseValue(year));
+        this.setLowerHouseValue(geoData.getLowerQuartileHouseValue(year));
+        this.setVacancyRate(geoData.getVacancyRate(year));
+        this.setPovertyRate(geoData.getPovertyRate(year));
+        this.setUnemploymentRate(geoData.getUnemploymentRate(year));
+        this.setTotalJobs(geoData.getTotalJobsQ1(year), geoData.getTotalJobsQ2(year), geoData.getTotalJobsQ3(year), geoData.getTotalJobsQ4(year));
+        this.setTotalHires(geoData.getTotalHiresQ1(year), geoData.getTotalHiresQ2(year), geoData.getTotalHiresQ3(year), geoData.getTotalHiresQ4(year));
+        this.setNewHires(geoData.getNewHiresQ1(year), geoData.getNewHiresQ2(year), geoData.getNewHiresQ3(year), geoData.getNewHiresQ4(year));
+        this.setSeparations(geoData.getSeparationsQ1(year), geoData.getSeparationsQ2(year), geoData.getSeparationsQ3(year), geoData.getSeparationsQ4(year));
+        this.setJobGains(geoData.getJobGainsQ1(year), geoData.getJobGainsQ2(year), geoData.getJobGainsQ3(year), geoData.getJobGainsQ4(year));
+        this.setJobLosses(geoData.getJobLossesQ1(year), geoData.getJobLossesQ2(year), geoData.getJobLossesQ3(year), geoData.getJobLossesQ4(year));
+        this.setNetJobs(geoData.getNetJobsQ1(year), geoData.getNetJobsQ2(year), geoData.getNetJobsQ3(year), geoData.getNetJobsQ4(year));
+        this.setPayroll(geoData.getPayrollQ1(year), geoData.getPayrollQ2(year), geoData.getPayrollQ3(year), geoData.getPayrollQ4(year));
+    }
+
+    clear(year) {
+        this.setYear(year);
+        this.setGeoId(null);
+        this.setGeoName(null);
+        this.setLandArea(null);
+        this.setWaterArea(null);
+        this.setPopulationDensity(null);
+        this.setPopulation(null);
+        this.setHouseholds(null);
+        this.setMedianAge(null);
+        this.setFamilyIncome(null);
+        this.setHouseholdIncome(null);
+        this.setPerCapitaIncome(null);
+        this.setHousingUnits(null);
+        this.setHouseValue(null);
+        this.setUpperHouseValue(null);
+        this.setLowerHouseValue(null);
+        this.setVacancyRate(null);
+        this.setPovertyRate(null);
+        this.setUnemploymentRate(null);
+        this.setTotalJobs(null, null, null, null);
+        this.setTotalHires(null, null, null, null);
+        this.setNewHires(null, null, null, null);
+        this.setSeparations(null, null, null, null);
+        this.setJobGains(null, null, null, null);
+        this.setJobLosses(null, null, null, null);
+        this.setNetJobs(null, null, null, null);
+        this.setPayroll(null, null, null, null);
     }
 
     setYear(value) {
@@ -247,73 +340,129 @@ class MapOverlay {
     }
 
     setLandArea(value) {
-        this.landArea.innerHTML = value == null ? "-" : value.toFixed(2);
+        this.landArea.innerHTML = value == null ? "-" : this.formatter.format(value.toFixed(2));
     }
 
     setWaterArea(value) {
-        this.waterArea.innerHTML = value == null ? "-" : value.toFixed(2);
+        this.waterArea.innerHTML = value == null ? "-" : this.formatter.format(value.toFixed(2));
     }
 
     setPopulationDensity(value) {
-        this.populationDensity.innerHTML = value == null ? "-" : value.toFixed(2);
+        this.populationDensity.innerHTML = value == null ? "-" : this.formatter.format(value.toFixed(2));
     }
 
     setPopulation(value) {
-        this.population.innerHTML = value == null ? "-" : value;
+        this.population.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setHouseholds(value) {
-        this.households.innerHTML = value == null ? "-" : value;
+        this.households.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setMedianAge(value) {
-        this.medianAge.innerHTML = value == null ? "-" : value;
+        this.medianAge.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setFamilyIncome(value) {
-        this.familyIncome.innerHTML = value == null ? "-" : value;
+        this.familyIncome.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setHouseholdIncome(value) {
-        this.householdIncome.innerHTML = value == null ? "-" : value;
+        this.householdIncome.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setPerCapitaIncome(value) {
-        this.perCapitaIncome.innerHTML = value == null ? "-" : value;
+        this.perCapitaIncome.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setHousingUnits(value) {
-        this.housingUnits.innerHTML = value == null ? "-" : value;
+        this.housingUnits.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setHouseValue(value) {
-        this.houseValue.innerHTML = value == null ? "-" : value;
+        this.houseValue.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setUpperHouseValue(value) {
-        this.upperHouseValue.innerHTML = value == null ? "-" : value;
+        this.upperHouseValue.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setLowerHouseValue(value) {
-        this.lowerHouseValue.innerHTML = value == null ? "-" : value;
+        this.lowerHouseValue.innerHTML = value == null ? "-" : this.formatter.format(value);
     }
 
     setVacancyRate(value) {
-        this.vacancyRate.innerHTML = value == null ? "-" : value + "%";
+        this.vacancyRate.innerHTML = value == null ? "-" : this.formatter.format(value) + "%";
     }
 
     setPovertyRate(value) {
-        this.povertyRate.innerHTML = value == null ? "-" : value + "%";
+        this.povertyRate.innerHTML = value == null ? "-" : this.formatter.format(value) + "%";
     }
 
     setUnemploymentRate(value) {
-        this.unemploymentRate.innerHTML = value == null ? "-" : value + "%";
+        this.unemploymentRate.innerHTML = value == null ? "-" : this.formatter.format(value) + "%";
+    }
+
+    setTotalJobs(q1Value, q2Value, q3Value, q4Value) {
+        this.totalJobsQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.totalJobsQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.totalJobsQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.totalJobsQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+
+    setTotalHires(q1Value, q2Value, q3Value, q4Value) {
+        this.totalHiresQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.totalHiresQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.totalHiresQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.totalHiresQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+
+    setNewHires(q1Value, q2Value, q3Value, q4Value) {
+        this.newHiresQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.newHiresQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.newHiresQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.newHiresQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+    
+    setSeparations(q1Value, q2Value, q3Value, q4Value) {
+        this.separationsQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.separationsQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.separationsQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.separationsQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+    
+    setJobGains(q1Value, q2Value, q3Value, q4Value) {
+        this.jobsGainQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.jobsGainQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.jobsGainQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.jobsGainQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+
+    setJobLosses(q1Value, q2Value, q3Value, q4Value) {
+        this.jobsLossQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.jobsLossQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.jobsLossQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.jobsLossQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+    
+    setNetJobs(q1Value, q2Value, q3Value, q4Value) {
+        this.netJobsQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.netJobsQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.netJobsQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.netJobsQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+    
+    setPayroll(q1Value, q2Value, q3Value, q4Value) {
+        this.payrollQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.payrollQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.payrollQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.payrollQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
     }
 }
 class MapController {
     constructor(accessToken, geoId, urlPrefix, centerPoint) {
         var self = this;
-        
+
         this.urlPrefix = urlPrefix;
         this.hoverId = {};
         this.selectedId = {};
@@ -338,16 +487,29 @@ class MapController {
         this.mapData[CensusGeography.place()] = new MapData(CensusGeography.place(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.place(), geoId); });
         this.mapData[CensusGeography.county()] = new MapData(CensusGeography.county(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.county(), geoId); });
         this.mapData[CensusGeography.tract()] = new MapData(CensusGeography.tract(), geoId, urlPrefix, function() { self.loadMap(CensusGeography.tract(), geoId); });
+        this.updateOverlayId = null;
 
-        $('input[type=radio][name=geography-selection]').change(function() {
+        $('#geography-picker').change(function() {
             self.reloadMapLayers();
         });
-        $('input[type=radio][name=overlay-selection]').change(function() {
+        $('#overlay-picker').change(function() {
             self.reloadMapLayers();
         });
-        $('input[type=radio][name=year-selection]').change(function() {
+        $('#year-picker').change(function() {
             self.reloadMapLayers();
         });
+    }
+
+    getSelectedGeography() {
+        return $("#geography-picker").attr("data-val");
+    }
+
+    getSelectedOverlay() {
+        return $("#overlay-picker").attr("data-val");
+    }
+
+    getSelectedYear() {
+        return $("#year-picker").attr("data-val");
     }
 
     reloadMapLayers() {
@@ -358,9 +520,9 @@ class MapController {
         }
         self.rawData.isReloading = true;
         
-        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
-        var selectedOverlay = $('input[type=radio][name=overlay-selection]:checked').val();
-        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        var selectedGeography = self.getSelectedGeography();
+        var selectedOverlay = self.getSelectedOverlay();
+        var selectedYear = self.getSelectedYear();
         if (selectedYear == 'recent') {
             selectedYear = null;
         }
@@ -519,6 +681,7 @@ class MapController {
         self.map.addBorderLayer('border-layer', 'polygons', '#252525', true);
 
         self.clearOverlay();
+        self.updateQWIVisibility(selectedGeography);
         self.rawData.hasMapLayers = true;
         self.rawData.isReloading = false;
     }
@@ -540,8 +703,8 @@ class MapController {
     }
 
     onMouseMove(e) {
-        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
-        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        var selectedGeography = this.getSelectedGeography();
+        var selectedYear = this.getSelectedYear();
         if (selectedYear == 'recent') {
             selectedYear = null;
         }
@@ -564,7 +727,7 @@ class MapController {
     }
 
     onMouseLeave(e) {
-        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
+        var selectedGeography = this.getSelectedGeography();
 
         this.map.setMousePointerEnabled(false);
         
@@ -575,8 +738,8 @@ class MapController {
     }
 
     onMouseClick(e) {
-        var selectedGeography = $('input[type=radio][name=geography-selection]:checked').val();
-        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        var selectedGeography = this.getSelectedGeography();
+        var selectedYear = this.getSelectedYear();
         if (selectedYear == 'recent') {
             selectedYear = null;
         }
@@ -631,65 +794,45 @@ class MapController {
     }
 
     updateOverlay(geoId, geography, year) {
-        var geoData = this.mapData[geography].getGeoData(geoId);
+        var self = this;
+        window.clearTimeout(self.updateOverlayId);
+        
+        self.updateOverlayId = window.setTimeout(function() {
+            var geoData = self.mapData[geography].getGeoData(geoId);
 
-        var landArea = geoData.getLandArea(year);
-        var population = geoData.getPopulationTotal(year);
-        var populationDensity = null;
-        if (landArea != null && population != null) {
-            populationDensity = population / landArea;
-        }
+            var landArea = geoData.getLandArea(year);
+            var population = geoData.getPopulationTotal(year);
+            var populationDensity = null;
+            if (landArea != null && population != null) {
+                populationDensity = population / landArea;
+            }
 
-        this.overlay.setYear(year);
-        this.overlay.setGeoId(geoId);
-        this.overlay.setGeoName(geoData.getName(year));
-        this.overlay.setLandArea(landArea);
-        this.overlay.setWaterArea(geoData.getWaterArea(year));
-        this.overlay.setPopulationDensity(populationDensity);
-        this.overlay.setPopulation(population);
-        this.overlay.setHouseholds(geoData.getHouseholdTotal(year));
-        this.overlay.setMedianAge(geoData.getMedianAge(year));
-        this.overlay.setFamilyIncome(geoData.getFamilyIncome(year));
-        this.overlay.setHouseholdIncome(geoData.getHouseholdIncome(year));
-        this.overlay.setPerCapitaIncome(geoData.getPerCapitaIncome(year));
-        this.overlay.setHousingUnits(geoData.getHousingUnitsTotal(year));
-        this.overlay.setHouseValue(geoData.getMedianHouseValue(year));
-        this.overlay.setUpperHouseValue(geoData.getUpperQuartileHouseValue(year));
-        this.overlay.setLowerHouseValue(geoData.getLowerQuartileHouseValue(year));
-        this.overlay.setVacancyRate(geoData.getVacancyRate(year));
-        this.overlay.setPovertyRate(geoData.getPovertyRate(year));
-        this.overlay.setUnemploymentRate(geoData.getUnemploymentRate(year));
-
-        var grades = this.ruleEngine.evaluate(geography, geoData);
-        this.reportCard.applyGrades(grades);
+            self.overlay.update(geoId, year, geoData, landArea, population, populationDensity);
+            var grades = self.ruleEngine.evaluate(geography, geoData);
+            self.reportCard.applyGrades(grades);
+        }, 10);
     }
 
     clearOverlay() {
-        var selectedYear = $('input[type=radio][name=year-selection]:checked').val();
+        var selectedYear = this.getSelectedYear();
         if (selectedYear == 'recent') {
             selectedYear = null;
         }
 
-        this.overlay.setYear(selectedYear);
-        this.overlay.setGeoId(null);
-        this.overlay.setGeoName(null);
-        this.overlay.setLandArea(null);
-        this.overlay.setWaterArea(null);
-        this.overlay.setPopulationDensity(null);
-        this.overlay.setPopulation(null);
-        this.overlay.setHouseholds(null);
-        this.overlay.setMedianAge(null);
-        this.overlay.setFamilyIncome(null);
-        this.overlay.setHouseholdIncome(null);
-        this.overlay.setPerCapitaIncome(null);
-        this.overlay.setHousingUnits(null);
-        this.overlay.setHouseValue(null);
-        this.overlay.setUpperHouseValue(null);
-        this.overlay.setLowerHouseValue(null);
-        this.overlay.setVacancyRate(null);
-        this.overlay.setPovertyRate(null);
-        this.overlay.setUnemploymentRate(null);
-        
+        this.overlay.clear(selectedYear);
         this.reportCard.clearGrades();
+    }
+
+    updateQWIVisibility(geography) {
+        switch (geography) {
+            case CensusGeography.state():
+            case CensusGeography.statisticalArea():
+            case CensusGeography.county():
+                $(".qwi").show();
+                break;
+            default:
+                $(".qwi").hide();
+                break;
+        }
     }
 }
