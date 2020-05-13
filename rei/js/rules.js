@@ -33,7 +33,7 @@ class RuleConditionDTO {
             throw "Invalid identifier";
         }
         var rateValue = Number(rate);
-        var yearRateValue = Number(rate);
+        var yearRateValue = Number(yearRate);
 
         if (Number.isNaN(rateValue)) {
             throw "Rate value cannot be NaN"
