@@ -599,6 +599,45 @@
                 <article>
                     <header class="column-full">
                         <h2 class="title">
+                            <a class="infotooltip">QWI: Hired Monthly Earnings
+                                <span class="info">
+                                    <em>Quarterly Workforce Indicators</em>
+                                    Provides local labor market statistics. For more information, refer to<br /> 
+                                    https://lehd.ces.census.gov/doc/QWI_101.pdf
+                                </span>
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="hiredMonthlyEarningsQ1">-</span>
+                            <span class="name">Q1</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="hiredMonthlyEarningsQ2">-</span>
+                            <span class="name">Q2</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="hiredMonthlyEarningsQ3">-</span>
+                            <span class="name">Q3</span>
+                        </span>
+                    </div>
+                    <div class="column-quarter">
+                        <span class="primary-stat">
+                            <span class="value" id="hiredMonthlyEarningsQ4">-</span>
+                            <span class="name">Q4</span>
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <div class="column-full qwi">
+                <article>
+                    <header class="column-full">
+                        <h2 class="title">
                             <a class="infotooltip">QWI: Total Payroll
                                 <span class="info">
                                     <em>Quarterly Workforce Indicators</em>
@@ -676,6 +715,9 @@
                     </div>
                     <div class="column-full qwi">
                         <canvas id="jobsChart"></canvas>
+                    </div>
+                    <div class="column-full qwi">
+                        <canvas id="hiredEarningsChart"></canvas>
                     </div>
                     <div class="column-full qwi">
                         <canvas id="payrollChart"></canvas>

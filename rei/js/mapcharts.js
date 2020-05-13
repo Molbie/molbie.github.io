@@ -92,6 +92,7 @@ class MapCharts {
         this.totalJobs = new MapLineChart('totalJobsChart', 'QWI: Total Jobs', [{title: 'Total', color: '#66C2A4', data: MapCharts.emptyQuarterlyDataset()}], MapCharts.quarters());
         this.hiring = new MapLineChart('hiringChart', 'QWI: Hiring Flow', [{title: 'All', color: '#8C96C6', data: MapCharts.emptyQuarterlyDataset()}, {title: 'New', color: '#7BCCC4', data: MapCharts.emptyQuarterlyDataset()}, {title: 'Separations', color: '#F768A1', data: MapCharts.emptyQuarterlyDataset()}], MapCharts.quarters());
         this.jobs = new MapLineChart('jobsChart', 'QWI: Job Flow', [{title: 'Gains', color: '#78C679', data: MapCharts.emptyQuarterlyDataset()}, {title: 'Losses', color: '#74A9CF', data: MapCharts.emptyQuarterlyDataset()}, {title: 'Net', color: '#FCC5C0', data: MapCharts.emptyQuarterlyDataset()}], MapCharts.quarters());
+        this.hiredEarnings = new MapLineChart('hiredEarningsChart', 'QWI: Hired Monthly Earnings', [{title: 'Average', color: '#005824', data: MapCharts.emptyQuarterlyDataset()}], MapCharts.quarters());
         this.payroll = new MapLineChart('payrollChart', 'QWI: Payroll', [{title: 'Total', color: '#66C2A4', data: MapCharts.emptyQuarterlyDataset()}], MapCharts.quarters());
         this.chartName = document.getElementById('chartName');
     }
@@ -109,6 +110,7 @@ class MapCharts {
         this.totalJobs.update([this.totalJobsData(geoData)]);
         this.hiring.update([this.totalHiresData(geoData), this.totalNewHiresData(geoData), this.totalSeparationsData(geoData)]);
         this.jobs.update([this.totalJobGainsData(geoData), this.totalJobLossesData(geoData), this.totalNetJobsData(geoData)]);
+        this.hiredEarnings.update([this.totalHiredEarningsData(geoData)]);
         this.payroll.update([this.totalPayrollData(geoData)]);
 
         var name = geoData.getName();
@@ -534,6 +536,38 @@ class MapCharts {
         return result;
     }
     
+    totalHiredEarningsData(geoData) {
+        var result = MapCharts.quarters();
+        var self = this;
+        
+        result.forEach(function(item, index) {
+            if (self.showValues) {
+                var values = item.split("_");
+
+                switch (values[0]) {
+                    case "Q1":
+                        result[index] = geoData.getHiredMonthlyEarningsQ1(values[1]);
+                        break;
+                    case "Q2":
+                        result[index] = geoData.getHiredMonthlyEarningsQ2(values[1]);
+                        break;
+                    case "Q3":
+                        result[index] = geoData.getHiredMonthlyEarningsQ3(values[1]);
+                        break;
+                    case "Q4":
+                        result[index] = geoData.getHiredMonthlyEarningsQ4(values[1]);
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                // TODO: implement QoQ
+            }
+        });
+        
+        return result;
+    }
+
     totalPayrollData(geoData) {
         var result = MapCharts.quarters();
         var self = this;

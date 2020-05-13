@@ -261,6 +261,10 @@ class MapOverlay {
         this.netJobsQ2 = document.getElementById('netJobsQ2');
         this.netJobsQ3 = document.getElementById('netJobsQ3');
         this.netJobsQ4 = document.getElementById('netJobsQ4');
+        this.hiredMonthlyEarningsQ1 = document.getElementById('hiredMonthlyEarningsQ1');
+        this.hiredMonthlyEarningsQ2 = document.getElementById('hiredMonthlyEarningsQ2');
+        this.hiredMonthlyEarningsQ3 = document.getElementById('hiredMonthlyEarningsQ3');
+        this.hiredMonthlyEarningsQ4 = document.getElementById('hiredMonthlyEarningsQ4');
         this.payrollQ1 = document.getElementById('payrollQ1');
         this.payrollQ2 = document.getElementById('payrollQ2');
         this.payrollQ3 = document.getElementById('payrollQ3');
@@ -294,6 +298,7 @@ class MapOverlay {
         this.setJobGains(geoData.getJobGainsQ1(year), geoData.getJobGainsQ2(year), geoData.getJobGainsQ3(year), geoData.getJobGainsQ4(year));
         this.setJobLosses(geoData.getJobLossesQ1(year), geoData.getJobLossesQ2(year), geoData.getJobLossesQ3(year), geoData.getJobLossesQ4(year));
         this.setNetJobs(geoData.getNetJobsQ1(year), geoData.getNetJobsQ2(year), geoData.getNetJobsQ3(year), geoData.getNetJobsQ4(year));
+        this.setHiredMonthlyEarnings(geoData.getHiredMonthlyEarningsQ1(year), geoData.getHiredMonthlyEarningsQ2(year), geoData.getHiredMonthlyEarningsQ3(year), geoData.getHiredMonthlyEarningsQ4(year));
         this.setPayroll(geoData.getPayrollQ1(year), geoData.getPayrollQ2(year), geoData.getPayrollQ3(year), geoData.getPayrollQ4(year));
     }
 
@@ -324,6 +329,7 @@ class MapOverlay {
         this.setJobGains(null, null, null, null);
         this.setJobLosses(null, null, null, null);
         this.setNetJobs(null, null, null, null);
+        this.setHiredMonthlyEarnings(null, null, null, null);
         this.setPayroll(null, null, null, null);
     }
 
@@ -452,6 +458,13 @@ class MapOverlay {
         this.netJobsQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
     }
     
+    setHiredMonthlyEarnings(q1Value, q2Value, q3Value, q4Value) {
+        this.hiredMonthlyEarningsQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
+        this.hiredMonthlyEarningsQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);
+        this.hiredMonthlyEarningsQ3.innerHTML = q3Value == null ? "-" : this.formatter.format(q3Value);
+        this.hiredMonthlyEarningsQ4.innerHTML = q4Value == null ? "-" : this.formatter.format(q4Value);
+    }
+
     setPayroll(q1Value, q2Value, q3Value, q4Value) {
         this.payrollQ1.innerHTML = q1Value == null ? "-" : this.formatter.format(q1Value);
         this.payrollQ2.innerHTML = q2Value == null ? "-" : this.formatter.format(q2Value);

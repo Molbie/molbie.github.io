@@ -1605,6 +1605,94 @@ class GeoData {
         return result;
     }
 
+    getHiredMonthlyEarningsQ1(year) {
+        var result = null;
+
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            if (!isNaN(timePeriod.jobsEarnings.q1.monthlyAverageHireAllStable)) {
+                result = timePeriod.jobsEarnings.q1.monthlyAverageHireAllStable;
+            }
+        } else {
+            for (const year of GeoData.years()) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.jobsEarnings.q1.monthlyAverageHireAllStable != null && !isNaN(timePeriod.jobsEarnings.q1.monthlyAverageHireAllStable)) {
+                    result = timePeriod.jobsEarnings.q1.monthlyAverageHireAllStable;
+                }
+                break;
+            }
+        }
+        
+        return result;
+    }
+
+    getHiredMonthlyEarningsQ2(year) {
+        var result = null;
+
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            if (!isNaN(timePeriod.jobsEarnings.q2.monthlyAverageHireAllStable)) {
+                result = timePeriod.jobsEarnings.q2.monthlyAverageHireAllStable;
+            }
+        } else {
+            for (const year of GeoData.years()) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.jobsEarnings.q2.monthlyAverageHireAllStable != null && !isNaN(timePeriod.jobsEarnings.q2.monthlyAverageHireAllStable)) {
+                    result = timePeriod.jobsEarnings.q2.monthlyAverageHireAllStable;
+                }
+                break;
+            }
+        }
+        
+        return result;
+    }
+
+    getHiredMonthlyEarningsQ3(year) {
+        var result = null;
+
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            if (!isNaN(timePeriod.jobsEarnings.q3.monthlyAverageHireAllStable)) {
+                result = timePeriod.jobsEarnings.q3.monthlyAverageHireAllStable;
+            }
+        } else {
+            for (const year of GeoData.years()) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.jobsEarnings.q3.monthlyAverageHireAllStable != null && !isNaN(timePeriod.jobsEarnings.q3.monthlyAverageHireAllStable)) {
+                    result = timePeriod.jobsEarnings.q3.monthlyAverageHireAllStable;
+                }
+                break;
+            }
+        }
+        
+        return result;
+    }
+
+    getHiredMonthlyEarningsQ4(year) {
+        var result = null;
+
+        if (year != null) {
+            var timePeriod = this.getData(year);
+            if (!isNaN(timePeriod.jobsEarnings.q4.monthlyAverageHireAllStable)) {
+                result = timePeriod.jobsEarnings.q4.monthlyAverageHireAllStable;
+            }
+        } else {
+            for (const year of GeoData.years()) {
+                var timePeriod = this.getData(year);
+                
+                if (timePeriod.jobsEarnings.q4.monthlyAverageHireAllStable != null && !isNaN(timePeriod.jobsEarnings.q4.monthlyAverageHireAllStable)) {
+                    result = timePeriod.jobsEarnings.q4.monthlyAverageHireAllStable;
+                }
+                break;
+            }
+        }
+        
+        return result;
+    }
+
     getPayrollQ1(year) {
         var result = null;
 
